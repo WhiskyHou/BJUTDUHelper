@@ -1,0 +1,58 @@
+﻿<Page
+    x:Class="BJUTDUHelper.View.WIFIHelperAuthView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:BJUTDUHelper.View"
+    xmlns:wifi="using:Windows.Devices.WiFi"
+    xmlns:control="using:BJUTDUHelper.Control"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <Page.Resources>
+        <local:TextIconConverter x:Key="TextIconConverter"></local:TextIconConverter>
+        <local:ForegroundConverter x:Key="ForegroundConverter"></local:ForegroundConverter>
+        
+    </Page.Resources>
+    <Grid Background="{ThemeResource BJUTDUHelperBlackColor}">
+        <Grid HorizontalAlignment="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0" VerticalAlignment="Bottom">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <ComboBox BorderBrush="Green" BorderThickness="0,2,0,2" x:Name="cbWifiList" Margin="0,0,0,20" Width="240"  SelectedIndex="{x:Bind WIFIHelperAuthVM.SelectIndex,Mode=TwoWay}" ItemsSource="{x:Bind WIFIHelperAuthVM.WIFIService.WifiList,Mode=OneWay}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate x:DataType="wifi:WiFiAvailableNetwork">
+                            <StackPanel  Orientation="Horizontal">
+                                <TextBlock Margin="4,0,4,0" VerticalAlignment="Center" FontFamily="Segoe MDL2 Assets" Text="{x:Bind SignalBars,Mode=OneWay,Converter={StaticResource TextIconConverter }}" Foreground="{x:Bind SignalBars,Mode=OneWay,Converter={StaticResource ForegroundConverter}}"/>
+                                <TextBlock Margin="4,0,4,0" VerticalAlignment="Center" Text="{x:Bind Ssid,Mode=OneWay}"></TextBlock>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+                <Border Grid.Row="1" BorderThickness="0,2,0,2" BorderBrush="#FF28C150"  >
+                    <StackPanel    VerticalAlignment="Center">
+                        <RadioButton Margin="0,4,0,4" Content="校内及校外网" Foreground="{ThemeResource BJUTDUHelperTitleColor}" IsChecked="{x:Bind WIFIHelperAuthVM.IsInternet,Mode=TwoWay}" />
+                        <RadioButton Margin="0,4,0,4" Content="校内网" Foreground="{ThemeResource BJUTDUHelperTitleColor}" ></RadioButton>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <Grid Grid.Row="1" VerticalAlignment="Center">
+                <Button Style="{ThemeResource GreenButtonStyle}" Width="240" Content="连接并认证" HorizontalAlignment="Center" Click="{x:Bind WIFIHelperAuthVM.Connect}"></Button>
+            </Grid>
+
+
+        </Grid>
+        <control:AccountModifyDlg Open="{x:Bind WIFIHelperAuthVM.Open,Mode=TwoWay}" Saved="{x:Bind WIFIHelperAuthVM.Saved,Mode=OneWay}"></control:AccountModifyDlg>
+        <!--<control:ProgressBar x:Name="progressBar"></control:ProgressBar>-->
+        <control:ProgressBar x:Name="progressBar" Message="{x:Bind WIFIHelperAuthVM.ProgressMessage,Mode=OneWay}" Active="{x:Bind WIFIHelperAuthVM.Active,Mode=TwoWay}"></control:ProgressBar>
+
+    </Grid>
+</Page>
