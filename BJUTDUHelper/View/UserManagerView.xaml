@@ -13,72 +13,223 @@
       >
     <Page.Resources>
         <local:ColorBrushConverter x:Key="ColorBrushConverter"></local:ColorBrushConverter>
-     
-        
+        <Style TargetType="AutoSuggestBox">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
+            <Setter Property="BorderBrush" Value="{StaticResource BJUTDUHelperBaseBackgroundThemeColor}"></Setter>
+            <Setter Property="Width" Value="140"></Setter>
+            <Setter Property="Height" Value="32"></Setter>
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="IsTabStop" Value="False" />
+            <Setter Property="TextBoxStyle" Value="{StaticResource AutoSuggestBoxTextBoxStyle}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="AutoSuggestBox">
+                        <Grid>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="Orientation">
+                                    <VisualState x:Name="Landscape"/>
+                                    <VisualState x:Name="Portrait"/>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <TextBox x:Name="TextBox"
+                                    Style="{TemplateBinding TextBoxStyle}" 
+                                    PlaceholderText="{TemplateBinding PlaceholderText}"
+                                    Header="{TemplateBinding Header}"
+                                    Width="{TemplateBinding Width}"
+                                    ScrollViewer.BringIntoViewOnFocusChange="False"
+                                    Canvas.ZIndex="0"
+                                    Margin="0"
+                                    Height="32"
+                                     BorderThickness="0"
+                                    DesiredCandidateWindowAlignment="BottomEdge"/>
+                            <Popup x:Name="SuggestionsPopup">
+                                <Border x:Name="SuggestionsContainer">
+                                    <Border.RenderTransform>
+                                        <TranslateTransform x:Name="UpwardTransform"/>
+                                    </Border.RenderTransform>
+                                    <ListView x:Name="SuggestionsList"
+                                            Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}"
+                                            BorderThickness="{ThemeResource AutoSuggestListBorderThemeThickness}"
+                                            BorderBrush="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"
+                                            DisplayMemberPath="{TemplateBinding DisplayMemberPath}"
+                                            IsItemClickEnabled="True"
+                                            ItemTemplate="{TemplateBinding ItemTemplate}"
+                                            ItemTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                                            ItemContainerStyle="{TemplateBinding ItemContainerStyle}"
+                                            MaxHeight="{ThemeResource AutoSuggestListMaxHeight}"
+                                            Margin="{ThemeResource AutoSuggestListMargin}">
+                                        <ListView.ItemContainerTransitions>
+                                            <TransitionCollection />
+                                        </ListView.ItemContainerTransitions>
+                                    </ListView>
+                                </Border>
+                            </Popup>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
     </Page.Resources>
     <Grid  Background="{ThemeResource BJUTDUHelperBlackColor}">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="wide">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="480"></AdaptiveTrigger>
+                    </VisualState.StateTriggers>
+                </VisualState>
+                <VisualState x:Name="narrow">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0"></AdaptiveTrigger>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter  Target="passbox1.(Grid.Row)" Value="1"></Setter>
+                        <Setter  Target="passbox1.(Grid.Column)" Value="0"></Setter>
+                        <Setter  Target="passbox2.(Grid.Row)" Value="1"></Setter>
+                        <Setter  Target="passbox2.(Grid.Column)" Value="0"></Setter>
+                        <Setter  Target="passbox3.(Grid.Row)" Value="1"></Setter>
+                        <Setter  Target="passbox3.(Grid.Column)" Value="0"></Setter>
+                    </VisualState.Setters>
+                </VisualState>
+
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
         <Pivot>
             <PivotItem Header="账号管理">
-                <StackPanel>
-                    <StackPanel.Resources>
-                        <Style TargetType="AutoSuggestBox">
-                            <Setter Property="Margin" Value="4"></Setter>
-                            <Setter Property="Width" Value="140"></Setter>
-                        </Style>
-                        <Style TargetType="PasswordBox">
-                            <Setter Property="Margin" Value="4"></Setter>
-                            <Setter Property="Width" Value="140"></Setter>
-                        </Style>
-                        <Style TargetType="TextBox">
-                            <Setter Property="Margin" Value="4"></Setter>
-                            <Setter Property="Width" Value="140"></Setter>
-                        </Style>
-                        <Style TargetType="Button">
-                            <Setter Property="Margin" Value="4"></Setter>
-                        </Style>
-                    </StackPanel.Resources>
+                <ScrollViewer HorizontalScrollMode="Disabled" VerticalScrollMode="Enabled" VerticalScrollBarVisibility="Hidden">
                     <StackPanel>
-                        <TextBlock>你的学号</TextBlock>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBox Text="{x:Bind UserManagerVM.StudentID,Mode=TwoWay}"></TextBox>
-                            <Button Content="保存" Command="{x:Bind UserManagerVM.SaveCommand}" CommandParameter="StudentID"  ></Button>
+                        <StackPanel.Resources>
+                            <Style TargetType="Border"  >
+                                <Setter Property="BorderThickness" Value="1"/>
+                                <Setter Property="Padding" Value="0"></Setter>
+                                <Setter Property="Margin" Value="4"></Setter>
+                                <Setter Property="BorderBrush" Value="{StaticResource BJUTDUHelperBaseBackgroundThemeColor}"></Setter>
+
+                            </Style>
+
+                            <Style TargetType="PasswordBox">
+                                <Setter Property="Height" Value="32"></Setter>
+                                <Setter Property="BorderThickness" Value="0"/>
+                                <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
+                                <Setter Property="BorderBrush" Value="{StaticResource BJUTDUHelperBaseBackgroundThemeColor}"></Setter>
+
+                                <Setter Property="Width" Value="140"></Setter>
+                            </Style>
+                            <Style TargetType="TextBox">
+                                <Setter Property="Height" Value="32"></Setter>
+                                <Setter Property="BorderThickness" Value="0"/>
+                                <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
+                                <Setter Property="BorderBrush" Value="{StaticResource BJUTDUHelperBaseBackgroundThemeColor}"></Setter>
+
+                                <Setter Property="Width" Value="140"></Setter>
+                            </Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource  GreenButtonStyle}">
+
+
+                            </Style>
+
+                        </StackPanel.Resources>
+
+                        <StackPanel >
+                            <TextBlock >你的学号</TextBlock>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                </Grid.RowDefinitions>
+                                <Border Grid.Column="0">
+                                    <TextBox   Text="{x:Bind UserManagerVM.StudentID,Mode=TwoWay}"></TextBox>
+                                </Border>
+
+                                <Button Grid.Column="2" Content="保存"  Command="{x:Bind UserManagerVM.SaveCommand}" CommandParameter="StudentID"  ></Button>
+                            </Grid>
+
+                        </StackPanel>
+                        <StackPanel Grid.Row="1">
+                            <TextBlock>信息门户</TextBlock>
+                            <Grid >
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                </Grid.RowDefinitions>
+                                <Border Grid.Column="0" >
+                                    <AutoSuggestBox  SuggestionChosen="{x:Bind UserManagerVM.InfoUser_SuggestionChosen}"
+                            Text="{x:Bind UserManagerVM.InfoUser.Username,Mode=TwoWay}"
+                            ItemsSource="{x:Bind UserManagerVM.BJUTInfoCenterUserinfos,Mode=OneWay}" DisplayMemberPath="Username"></AutoSuggestBox>
+                                </Border>
+                                <Border  x:Name="passbox1" Grid.Column="1">
+                                    <PasswordBox Password="{x:Bind UserManagerVM.InfoUser.Password,Mode=TwoWay}"></PasswordBox>
+                                </Border>
+
+                                <Button Grid.Column="2" Content="保存" Command="{x:Bind UserManagerVM.SaveCommand}" CommandParameter="BJUTInfoCenterUserinfo"  ></Button>
+                            </Grid>
+                        </StackPanel>
+                        <StackPanel Grid.Row="2">
+                            <TextBlock>图书馆</TextBlock>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                </Grid.RowDefinitions>
+                                <Border>
+                                    <AutoSuggestBox Grid.Column="0" SuggestionChosen="{x:Bind UserManagerVM.LibUser_SuggestionChosen}"
+                            Text="{x:Bind UserManagerVM.LibUser.Username,Mode=TwoWay}"
+                            ItemsSource="{x:Bind UserManagerVM.BJUTLibCenterUserinfos,Mode=OneWay}" DisplayMemberPath="Username"></AutoSuggestBox>
+                                </Border>
+                                <Border x:Name="passbox2" Grid.Column="1" >
+                                    <PasswordBox  Password="{x:Bind UserManagerVM.LibUser.Password,Mode=TwoWay}"></PasswordBox>
+                                </Border>
+
+                                <Button Grid.Column="2" Content="保存" Command="{x:Bind UserManagerVM.SaveCommand}" CommandParameter="BJUTLibCenterUserinfo"  ></Button>
+                            </Grid>
+                        </StackPanel>
+                        <StackPanel Grid.Row="3">
+                            <TextBlock>教务管理</TextBlock>
+                            <Grid >
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                </Grid.RowDefinitions>
+                                <Border Grid.Column="0" >
+                                    <AutoSuggestBox SuggestionChosen="{x:Bind UserManagerVM.EduUser_SuggestionChosen}"
+                            Text="{x:Bind UserManagerVM.EduUser.Username,Mode=TwoWay}"
+                            ItemsSource="{x:Bind UserManagerVM.BJUTEduCenterUserinfos,Mode=OneWay}" DisplayMemberPath="Username"></AutoSuggestBox>
+                                </Border>
+                                <Border x:Name="passbox3"  Grid.Column="1">
+                                    <PasswordBox  Password="{x:Bind UserManagerVM.EduUser.Password,Mode=TwoWay}"></PasswordBox>
+                                </Border>
+
+                                <Button Grid.Column="2" Content="保存" Command="{x:Bind UserManagerVM.SaveCommand}" CommandParameter="BJUTEduCenterUserinfo"  ></Button>
+                            </Grid>
                         </StackPanel>
                     </StackPanel>
-                    <StackPanel>
-                        <TextBlock>信息门户</TextBlock>
-                        <StackPanel Orientation="Horizontal">
-                            <AutoSuggestBox SuggestionChosen="{x:Bind UserManagerVM.InfoUser_SuggestionChosen}"
-                                Text="{x:Bind UserManagerVM.InfoUser.Username,Mode=TwoWay}"
-                                ItemsSource="{x:Bind UserManagerVM.BJUTInfoCenterUserinfos,Mode=OneWay}" DisplayMemberPath="Username"></AutoSuggestBox>
-                            <PasswordBox Password="{x:Bind UserManagerVM.InfoUser.Password,Mode=TwoWay}"></PasswordBox>
-                            <Button Content="保存" Command="{x:Bind UserManagerVM.SaveCommand}" CommandParameter="BJUTInfoCenterUserinfo"  ></Button>
-                        </StackPanel>
-                    </StackPanel>
-                    <StackPanel>
-                        <TextBlock>图书馆</TextBlock>
-                        <StackPanel Orientation="Horizontal">
-                            <AutoSuggestBox SuggestionChosen="{x:Bind UserManagerVM.LibUser_SuggestionChosen}"
-                                Text="{x:Bind UserManagerVM.LibUser.Username,Mode=TwoWay}"
-                                ItemsSource="{x:Bind UserManagerVM.BJUTLibCenterUserinfos,Mode=OneWay}" DisplayMemberPath="Username"></AutoSuggestBox>
-                            <PasswordBox Password="{x:Bind UserManagerVM.LibUser.Password,Mode=TwoWay}"></PasswordBox>
-                            <Button Content="保存" Command="{x:Bind UserManagerVM.SaveCommand}" CommandParameter="BJUTLibCenterUserinfo"  ></Button>
-                        </StackPanel>
-                    </StackPanel>
-                    <StackPanel>
-                        <TextBlock>教务管理</TextBlock>
-                        <StackPanel Orientation="Horizontal">
-                            <AutoSuggestBox SuggestionChosen="{x:Bind UserManagerVM.EduUser_SuggestionChosen}"
-                                Text="{x:Bind UserManagerVM.EduUser.Username,Mode=TwoWay}"
-                                ItemsSource="{x:Bind UserManagerVM.BJUTEduCenterUserinfos,Mode=OneWay}" DisplayMemberPath="Username"></AutoSuggestBox>
-                            <PasswordBox Password="{x:Bind UserManagerVM.EduUser.Password,Mode=TwoWay}"></PasswordBox>
-                            <Button Content="保存" Command="{x:Bind UserManagerVM.SaveCommand}" CommandParameter="BJUTEduCenterUserinfo"  ></Button>
-                        </StackPanel>
-                    </StackPanel>
-                </StackPanel>
+                </ScrollViewer>
             </PivotItem>
             <PivotItem Header="界面&amp;布局">
                 <ListView Header="主题色" Foreground="{ThemeResource BJUTDUHelperBaseBackgroundThemeColor}" ItemsSource="{x:Bind UserManagerVM.ThemeColors}"
-                          IsItemClickEnabled="True" ItemClick="{x:Bind UserManagerVM.ThemeItemClick}">
+                          IsItemClickEnabled="True" ItemClick="{x:Bind UserManagerVM.ThemeItemClick,Mode=OneWay}">
                     <ListView.ItemTemplate>
                         <DataTemplate x:DataType="model:ThemeColorModel">
                             <StackPanel Orientation="Horizontal">

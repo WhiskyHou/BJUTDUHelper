@@ -9,5 +9,6 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <TextBlock Text="DetailView" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+       
     </Grid>
 </Page>

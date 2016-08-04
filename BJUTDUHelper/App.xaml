@@ -12,13 +12,13 @@
                 
                 <ResourceDictionary x:Key="Default">
                     <viewmodel:ViewModelLocator x:Key="Locator"></viewmodel:ViewModelLocator>
-                    
                     <SolidColorBrush x:Key="BJUTDUHelperTitleColor" Color="#FF544F4F"></SolidColorBrush>
                     <SolidColorBrush x:Key="BJUTDUHelperBlackColor" Color="#FFF2F2F2"></SolidColorBrush>
                     <SolidColorBrush x:Key="BJUTDUHelperBaseBackgroundThemeColor" Color="#FF1D91FF"></SolidColorBrush>
                     <SolidColorBrush x:Key="BJUTDUHelperBaseForegroundThemeColor" Color="White"></SolidColorBrush>
                     <SolidColorBrush x:Key="BJUTDUHelperGreenButtonThemeColor" Color="#FF62CD42"></SolidColorBrush>
                     <SolidColorBrush x:Key="BJUTDUHelperRedButtonThemeColor" Color="#FFF54545"></SolidColorBrush>
+                   
                     <Style x:Key="ButtonStyle" TargetType="Button">
                         <Setter Property="Foreground" Value="{ThemeResource BJUTDUHelperBaseForegroundThemeColor}"></Setter>
                         <Setter Property="Background" Value="{ThemeResource SystemControlBackgroundBaseLowBrush}"/>
@@ -192,8 +192,15 @@
                         <Setter Property="Background" Value="{ThemeResource BJUTDUHelperRedButtonThemeColor}"></Setter>
                     </Style>
                 </ResourceDictionary>
+                
             </ResourceDictionary.ThemeDictionaries>
-            
+            <ResourceDictionary x:Key="ThemeColors">
+                <Color x:Key="浪漫紫" >#FFBE3CFD</Color>
+                <Color x:Key="烟波蓝">#FF1D91FF</Color>
+                <Color x:Key="橄榄绿">#FF32B434</Color>
+                <Color x:Key="落日黄">#FFFF9923</Color>
+                <Color x:Key="少女粉">#FFFA6198</Color>
+            </ResourceDictionary>
         </ResourceDictionary>
         
     </Application.Resources>

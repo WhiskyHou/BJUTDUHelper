@@ -31,5 +31,18 @@ namespace BJUTDUHelper.Service
 
             }
         }
+        public static List<Model.ThemeColorModel> GetAllColor()
+        {
+            List<Model.ThemeColorModel> list = new List<Model.ThemeColorModel>();
+            var colors=Application.Current.Resources["ThemeColors"] as ResourceDictionary;
+            foreach (var item in colors)
+            {
+                Model.ThemeColorModel model = new Model.ThemeColorModel();
+                model.Name = (string)item.Key;
+                model.ThemeColor = (Color)item.Value;
+                list.Add(model);
+            }
+            return list;
+        }
     }
 }

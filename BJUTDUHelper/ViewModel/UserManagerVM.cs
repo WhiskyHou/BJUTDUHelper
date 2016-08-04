@@ -27,22 +27,26 @@ namespace BJUTDUHelper.ViewModel
             BJUTEduCenterUserinfos = new ObservableCollection<BJUTEduCenterUserinfo>();
             BJUTInfoCenterUserinfos = new ObservableCollection<BJUTInfoCenterUserinfo>();
             BJUTLibCenterUserinfos = new ObservableCollection<BJUTLibCenterUserinfo>();
+
+            ThemeColors = new ObservableCollection<ThemeColorModel>();
         }
 
         public ICommand LoadedCommand { get; set; }
         public void Loaded()
         {
             LoadAccountInfo();//加载本地账号信息
+
+            ThemeColors.Clear();
+            var colors=Service.SettingService.GetAllColor();
+            foreach (var item in colors)
+            {
+                ThemeColors.Add(item);
+            }
+            
         }
 
         #region 用户主题设置
-        public List<Model.ThemeColorModel> ThemeColors { get; set; } =new List<Model.ThemeColorModel>
-        {   new Model.ThemeColorModel { Name="浪漫紫",ThemeColor=new Windows.UI.Color {A=255,  R=190,G=60,B=253 } },
-            new Model.ThemeColorModel { Name="烟波蓝",ThemeColor=new Windows.UI.Color {A=255,  R=29,G=145,B=255 } },
-            new Model.ThemeColorModel { Name="橄榄绿",ThemeColor=new Windows.UI.Color { A=255,R=50,G=180,B=52 } },
-            new Model.ThemeColorModel { Name="落日黄",ThemeColor=new Windows.UI.Color { A=255, R=255,G=153,B=35 } },
-            new Model.ThemeColorModel { Name="少女粉",ThemeColor=new Windows.UI.Color {A=255,  R=250,G=97,B=152 } }
-        };
+        public ObservableCollection<Model.ThemeColorModel> ThemeColors { get; set; }
         public async void ThemeItemClick(object sender, ItemClickEventArgs e)
         {
             var item = e.ClickedItem as Model.ThemeColorModel;
