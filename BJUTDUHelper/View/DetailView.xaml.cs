@@ -25,7 +25,6 @@ namespace BJUTDUHelper.View
     {
         public DetailView()
         {
-
             this.InitializeComponent();
         }
     }

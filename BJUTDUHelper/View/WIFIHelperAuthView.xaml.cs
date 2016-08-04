@@ -49,14 +49,12 @@ namespace BJUTDUHelper.View
         }
         private void ProgressBar_Closed(object sender, EventArgs e)
         {
-            SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Collapsed;
-            SystemNavigationManager.GetForCurrentView().BackRequested -= ProgressBar_BackRequested;
+            Service.NavigationService.UnRegSingleHandler(ProgressBar_BackRequested);
         }
 
         private void ProgressBar_Acticed(object sender, EventArgs e)
         {
-            SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
-            SystemNavigationManager.GetForCurrentView().BackRequested += ProgressBar_BackRequested;
+            Service.NavigationService.RegSingleHandler(ProgressBar_BackRequested);
         }
 
         private void ProgressBar_BackRequested(object sender, BackRequestedEventArgs e)
@@ -121,6 +119,20 @@ namespace BJUTDUHelper.View
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             throw new NotImplementedException();
+        }
+    }
+    public class UserinfoConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            Model.BJUTInfoCenterUserinfo user = (Model.BJUTInfoCenterUserinfo)value;
+            return user;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            Model.BJUTInfoCenterUserinfo user = (Model.BJUTInfoCenterUserinfo)value;
+            return user;
         }
     }
 

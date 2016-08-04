@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.UI.Xaml;
 using BJUTDUHelper.BJUTDUHelperlException;
+using System.Collections.ObjectModel;
+using BJUTDUHelper.Model;
 
 namespace BJUTDUHelper.ViewModel
 {
@@ -22,6 +24,16 @@ namespace BJUTDUHelper.ViewModel
         private readonly string libLoginUri = "http://172.24.39.253/portal/logon.htm";
 
         public CancellationTokenSource cancellationTokenSource { get; set; }
+
+        public ViewModel.AccountModifyVM AccountModifyVM { get; set; }
+
+        private WIFIHelperVM _WIFIHelperVM;
+        public WIFIHelperVM WIFIHelperVM
+        {
+            get { return _WIFIHelperVM; }
+            set { Set(ref _WIFIHelperVM, value); }
+        }
+
         private bool _isAuthencated = false;
         public bool IsAuthencated
         {
@@ -65,24 +77,22 @@ namespace BJUTDUHelper.ViewModel
 
         public WIFIHelperAuthVM()
         {
-            
+            AccountModifyVM = new AccountModifyVM();
+            AccountModifyVM.Saved += SaveUserinfo;
+
         }
         public async void Loaded(object o)
         {
+            View.WIFIAuthViewParam param = o as View.WIFIAuthViewParam;
+            WIFIHelperVM = param.WIFIHelperVM;
+
             if (WIFIService == null)
                 WIFIService = new Service.WIFIService();
             WIFIService.ScanWifiList();
 
-            if (o != null)
-            {
-                bool status = (bool)o;
-                IsAuthencated = status;
-            }
-            else
-            {
-                SetAuthenStatus();
-            }
-           
+            SetAuthenStatus();
+
+            
         }
         /// <summary>
         /// 连接wifi
@@ -95,6 +105,12 @@ namespace BJUTDUHelper.ViewModel
             if (SelectIndex < 0)
             {
                 GalaSoft.MvvmLight.Messaging.Messenger.Default.Send("选择一个WIFI", messageToken);
+                Active = false;
+                return;
+            }
+            if(WIFIHelperVM.InfoUser==null||string.IsNullOrWhiteSpace(WIFIHelperVM.InfoUser.Username)|| string.IsNullOrWhiteSpace(WIFIHelperVM.InfoUser.Password))
+            {
+                GalaSoft.MvvmLight.Messaging.Messenger.Default.Send("请选择一个账号", messageToken);
                 Active = false;
                 return;
             }
@@ -120,7 +136,7 @@ namespace BJUTDUHelper.ViewModel
             {
                 try
                 {
-                    var user = await Manager.AccountManager.GetAccount<Model.BJUTInfoCenterUserinfo>();
+                    var user = WIFIHelperVM.InfoUser;
                     if (user == null)
                     {
                         throw new NullRefUserinfoException("请输入用户名和密码");
@@ -134,20 +150,20 @@ namespace BJUTDUHelper.ViewModel
                         IsAuthencated = true;
 
                         //IsInternet==true,则直接注册网关
-                        NavigationVM.FuncFrame.Navigate(typeof(View.WIFIHelperRegView), IsInternet);
+                        NavigationVM.FuncFrame.Navigate(typeof(View.WIFIHelperRegView), new View.WIFIRegViewParam { IsInternet= IsInternet, WIFIHelperVM= this.WIFIHelperVM });
                     }
                 }
                 catch (NullRefUserinfoException)
                 {
-                    Saved = new Action<object>(SaveUserinfo);
-                    Saved += (o) => { Auth(); };
-                    Open = true;
+                    AccountModifyVM.Open = true;
+                    AccountModifyVM.Saved -= Auth;
+                    AccountModifyVM.Saved += Auth;
                 }
                 catch (InvalidUserInfoException)
                 {
-                    Saved = new Action<object>(SaveUserinfo);
-                    Saved += (o) => { Auth(); };
-                    Open = true;
+                    AccountModifyVM.Open = true;
+                    AccountModifyVM.Saved -= Auth;
+                    AccountModifyVM.Saved += Auth;
                 }
                 catch (LoginTipException tip)
                 {
@@ -300,44 +316,23 @@ namespace BJUTDUHelper.ViewModel
         }
 
        
-        //控制用户名密码框的状态
-        private bool _open;
-        public bool Open
+       
+        public void SaveUserinfo()
         {
-            get { return _open; }
-            set { Set(ref _open, value); }
-        }
-
-        //保存用户名密码
-        private Action<object> _saved;
-        public Action<object> Saved
-        {
-            get { return _saved; }
-            set { Set(ref _saved, value); }
-        }
-        public void SaveUserinfo(object o)
-        {
-            var user = o as Model.UserBase;
             Model.BJUTInfoCenterUserinfo BJUTInfoCenterUserinfo = new Model.BJUTInfoCenterUserinfo();
-            BJUTInfoCenterUserinfo.Username = user.Username;
-            BJUTInfoCenterUserinfo.Password = user.Password;
+            BJUTInfoCenterUserinfo.Username =  AccountModifyVM.Username;
+            BJUTInfoCenterUserinfo.Password = AccountModifyVM.Password;
+            //保存到数据库
+            Service.DbService.SaveInfoCenterUserinfo(BJUTInfoCenterUserinfo);
+            //同时修改当前选定账号
+            WIFIHelperVM.InfoUser = BJUTInfoCenterUserinfo;
 
-            try
-            {
-                Manager.AccountManager.SetAccount(BJUTInfoCenterUserinfo);
-                
-            }
-            catch (NullReferenceException nullRef)
-            {
-                GalaSoft.MvvmLight.Messaging.Messenger.Default.Send<string>(nullRef.Message, messageToken);
-            }
-            catch
-            {
-                GalaSoft.MvvmLight.Messaging.Messenger.Default.Send<string>("保存失败", messageToken);
-            }
+            GalaSoft.MvvmLight.Messaging.Messenger.Default.Send<string>("保存成功", messageToken);
 
         }
 
+
+        
 
     }
 }

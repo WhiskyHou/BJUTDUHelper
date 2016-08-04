@@ -36,15 +36,21 @@ namespace BJUTDUHelper.ViewModel
         public Service.HttpBaseService _httpService;
         private Service.BJUTCampusCardService campusCardService;
 
+        public AccountModifyVM AccountModifyVM { get; set; }
         public BJUTCampusCardVM()
         {
             //SaveCommand = new RelayCommand<object>(Save);
                _httpService = new Service.HttpBaseService();
             campusCardService = new Service.BJUTCampusCardService();
+            AccountModifyVM = new AccountModifyVM();
+            AccountModifyVM.Saved += SaveUserinfo;
         }
-        public async void Loaded()
+        public  void Loaded()
         {
-            var user=await Manager.AccountManager.GetAccount<Model.BJUTInfoCenterUserinfo>();
+            var studentid = Service.FileService.GetStudentID();
+            var user = Service.DbService.GetInfoCenterUserinfo<Model.BJUTInfoCenterUserinfo>().Where(m => m.Username == studentid).FirstOrDefault();
+            if (user == null)
+                return;
             BJUTInfoCenterUserinfo = user;
             LoadCampascadInfo();
             LoginInfoCenter();
@@ -145,16 +151,16 @@ namespace BJUTDUHelper.ViewModel
             catch(NullReferenceException )
             {
                 GalaSoft.MvvmLight.Messaging.Messenger.Default.Send("请输入用户名和密码", messageToken);
-                Open = true;
-                Saved = new Action<object>(SaveUserinfo);
-                Saved += (o) => { LoginInfoCenter(); };
+                AccountModifyVM.Open = true;
+                AccountModifyVM.Saved -= LoginInfoCenter;
+                AccountModifyVM.Saved += LoginInfoCenter;
             }
             catch (BJUTDUHelperlException.InvalidUserInfoException userinfoException)
             {
                 GalaSoft.MvvmLight.Messaging.Messenger.Default.Send("用户名或密码无效", messageToken);
-                Open = true;
-                Saved =new Action<object>( SaveUserinfo);
-                Saved += (o) => { LoginInfoCenter(); };
+                AccountModifyVM.Open = true;
+                AccountModifyVM.Saved -= LoginInfoCenter;
+                AccountModifyVM.Saved += LoginInfoCenter;
             }
             catch(HttpRequestException )
             {
@@ -244,46 +250,22 @@ namespace BJUTDUHelper.ViewModel
             }
         }
 
-        #region 用户名密码框逻辑代码
-        //控制用户名密码框的状态
-        private bool _open;
-        public bool Open
+       
+        public async void SaveUserinfo()
         {
-            get { return _open; }
-            set { Set(ref _open, value); }
-        }
-        private Action<object> _saved;
-        public Action<object> Saved
-        {
-            get { return _saved; }
-            set { Set(ref _saved, value); }
-        }
-        public async void SaveUserinfo(object o)
-        {
-            var user = o as Model.UserBase;
             if (BJUTInfoCenterUserinfo == null)
             {
                 BJUTInfoCenterUserinfo = new Model.BJUTInfoCenterUserinfo();
             }
 
-            BJUTInfoCenterUserinfo.Username = user.Username;
-            BJUTInfoCenterUserinfo.Password = user.Password;
+            BJUTInfoCenterUserinfo.Username = AccountModifyVM.Username;
+            BJUTInfoCenterUserinfo.Password = AccountModifyVM.Password;
 
-            try
-            {
-                Manager.AccountManager.SetAccount(BJUTInfoCenterUserinfo);
-                
-            }
-            catch (NullReferenceException nullRef)
-            {
-                GalaSoft.MvvmLight.Messaging.Messenger.Default.Send<string>(nullRef.Message, messageToken);
-            }
-            catch
-            {
-                GalaSoft.MvvmLight.Messaging.Messenger.Default.Send<string>("保存失败", messageToken);
-            }
+            Service.DbService.SaveInfoCenterUserinfo(BJUTInfoCenterUserinfo);
+
+            GalaSoft.MvvmLight.Messaging.Messenger.Default.Send<string>("保存成功", messageToken);
+           
         }
-        #endregion
 
         #region 进度环
         private bool _active;

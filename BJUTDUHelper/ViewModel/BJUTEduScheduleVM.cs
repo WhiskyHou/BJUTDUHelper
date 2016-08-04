@@ -32,6 +32,8 @@ namespace BJUTDUHelper.ViewModel
             set { Set(ref _schedule, value); }
         }
 
+        public ViewModel.CheckCodeVM CheckCodeVM { get; set; }
+        public AccountModifyVM AccountModifyVM { get; set; }
         public  string Name { get; set; }
 
         private string _yaer;
@@ -56,14 +58,22 @@ namespace BJUTDUHelper.ViewModel
 
         public BJUTEduScheduleVM()
         {
-            
             _coreService = new Service.BJUTEduCenterService();
+            CheckCodeVM = new CheckCodeVM();
+            CheckCodeVM.CheckCodeSaved += CheckCodeSaved;
+            CheckCodeVM.CheckCodeRefresh += CheckCodeRefresh;
+
+            AccountModifyVM = new AccountModifyVM();
+            AccountModifyVM.Saved += SaveUserinfo;
         }
         public async void Loaded(object param)
         {
             if (param != null)
             {
-                _httpService = param as Service.HttpBaseService;
+                View.EduCenterViewParam eduCenterViewParam = param as View.EduCenterViewParam;
+                BJUTEduCenterUserinfo = eduCenterViewParam.BJUTEduCenterUserinfo;
+                _httpService = eduCenterViewParam.HttpService;
+                
             }
 
             Year = ViewModel.BJUTEduCenterVM.Year;
@@ -92,65 +102,42 @@ namespace BJUTDUHelper.ViewModel
                     Schedule.CurrentWeek = scedule.CurrentWeek;
                     Schedule.SelectedWeek = scedule.SelectedWeek;
                 }
-                
-                
             }
-            BJUTEduCenterUserinfo= await Manager.AccountManager.GetAccount<Model.BJUTEduCenterUserinfo>();
         }
        
         public async void GetCurrentSchedule(string name,string username)
         {
+            string html = string.Empty;
             try
             {
-                string re;
-                re = await _httpService.SendRequst("http://gdjwgl.bjut.edu.cn/xskbcx.aspx?xh=" + username + "&xm=" + name + "&gnmkdm=N121603", HttpMethod.Get, referUri: "http://gdjwgl.bjut.edu.cn/xs_main.aspx?xh=" + username);
-               
-                var list= Model.ScheduleModel.GetSchedule(re);//获取课表
-                Schedule = new Model.ScheduleModel { ScheduleItemList = list, CurrentWeek = ViewModel.BJUTEduCenterVM.Week ,   };
-                
+                html=await _coreService.GetCurrentSchedule(_httpService, name, username);   
+            }
+            catch (HttpRequestException ex)
+            {
+                GalaSoft.MvvmLight.Messaging.Messenger.Default.Send("获取数据失败", messageToken);
+            }
+            catch
+            {
+                GalaSoft.MvvmLight.Messaging.Messenger.Default.Send("遇到意外错误", messageToken);
+                return;
+            }
+            try
+            {
+                var list = Model.ScheduleModel.GetSchedule(html);//获取课表
+                Schedule = new Model.ScheduleModel { ScheduleItemList = list, CurrentWeek = ViewModel.BJUTEduCenterVM.Week, };
+
                 Schedule.GetAllWeek();//获取最大周数
                 Schedule.SelectedWeek = ViewModel.BJUTEduCenterVM.Week;
 
                 SaveSchedule();
             }
-            catch (Exception ex)
+            catch
             {
-                GalaSoft.MvvmLight.Messaging.Messenger.Default.Send("解析Schedule出错", messageToken);
+                GalaSoft.MvvmLight.Messaging.Messenger.Default.Send("解析数据失败", messageToken);
             }
         }
 
-        //public async void GetHistorySchedule(string name, string username,string year,string term)
-        //{
-        //    try
-        //    {
-        //        string re;
-        //        re = await _httpService.SendRequst("http://gdjwgl.bjut.edu.cn/xskbcx.aspx?xh=" + username + "&xm=" + name + "&gnmkdm=N121603", HttpMethod.Get, referUri: "http://gdjwgl.bjut.edu.cn/xs_main.aspx?xh=" + username);
-        //        //re = await _httpService.SendRequst("http://gdjwgl.bjut.edu.cn/xs_main.aspx?xh=" + username, HttpMethod.Get);
-
-
-        //        string __VIEWSTATEString;
-        //        __VIEWSTATEString = Service.BJUTEduCenterService.GetViewstate(re);
-
-        //        IDictionary<string, string> parameters = new Dictionary<string, string>();
-        //        parameters.Add("__EVENTTARGET", "xqd");
-        //        parameters.Add("__EVENTARGUMENT", "");
-        //        parameters.Add("__VIEWSTATE", __VIEWSTATEString);
-        //        parameters.Add("xnd", year);
-        //        parameters.Add("xqd", term);
-
-        //        re = await _httpService.SendRequst("http://gdjwgl.bjut.edu.cn/xskbcx.aspx?xh=" + username + "&xm=" + name + "&gnmkdm=N121603", HttpMethod.Post, parameters);
-
-        //        if (Schedule == null)
-        //        {
-        //            Schedule = new Model.ScheduleModel();
-        //        }
-        //        Schedule.GetSchedule(re);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        GalaSoft.MvvmLight.Messaging.Messenger.Default.Send("解析Schedule出错", messageToken);
-        //    }
-        //}
+        
 
         #region 本地管理逻辑
         public async void SaveSchedule()
@@ -168,48 +155,32 @@ namespace BJUTDUHelper.ViewModel
         }
         #endregion
 
-
-        #region 验证码框
-        private string _checkCode;
-        public string CheckCode
-        {
-            get { return _checkCode; }
-            set { Set(ref _checkCode, value); }
-        }
-        private ImageSource _checkCodeSource;
-        public ImageSource CheckCodeSource
-        {
-            get { return _checkCodeSource; }
-            set { Set(ref _checkCodeSource, value); }
-        }
-        private bool _openCheckCodeDlg;
-        public bool OpenCheckCodeDlg
-        {
-            get { return _openCheckCodeDlg; }
-            set { Set(ref _openCheckCodeDlg, value); }
-        }
-
         public async void Refresh()
         {
-            var re = await GetAuthState();
-            if (re == true)
+            try
             {
-                GetCurrentSchedule(Name, BJUTEduCenterUserinfo.Username);
+                var re = await _coreService.GetAuthState(_httpService, BJUTEduCenterUserinfo.Username);
+                if (re == true)
+                {
+                    GetCurrentSchedule(Name, BJUTEduCenterUserinfo.Username);
+                }
+                else
+                {
+                    CheckCodeRefresh();
+                }
             }
-            else
+            catch(HttpRequestException requestException)
             {
-                var source = await _coreService.GetCheckCode(_httpService);
-                CheckCodeSource = source;
-                OpenCheckCodeDlg = true;
+                GalaSoft.MvvmLight.Messaging.Messenger.Default.Send("网络错误", messageToken);
+            }
+            catch (Exception ex)
+            {
+                GalaSoft.MvvmLight.Messaging.Messenger.Default.Send(ex.Message, messageToken);
             }
         }
 
-        /// <summary>
-        /// 保存验证码后登录并导航
-        /// </summary>
-        /// <param name="o"></param>
-        /// <param name="e"></param>
-        public async void CheckCodeSaved(object o, EventArgs e)
+        //保存验证码后登录并导航
+        public async void CheckCodeSaved()
         {
             try
             {
@@ -217,7 +188,7 @@ namespace BJUTDUHelper.ViewModel
                 {
                     throw new NullRefUserinfoException("请输入用户名和密码");
                 }
-                var name = await _coreService.LoginEduCenter(_httpService, BJUTEduCenterUserinfo.Username, BJUTEduCenterUserinfo.Password, CheckCode);
+                var name = await _coreService.LoginEduCenter(_httpService, BJUTEduCenterUserinfo.Username, BJUTEduCenterUserinfo.Password, CheckCodeVM.CheckCode);
 
                 Name = name;
                 GetCurrentSchedule(name, BJUTEduCenterUserinfo.Username);
@@ -226,8 +197,8 @@ namespace BJUTDUHelper.ViewModel
             catch(NullRefUserinfoException  )
             {
                 GalaSoft.MvvmLight.Messaging.Messenger.Default.Send("请输入用户名和密码", messageToken);
-                Saved = new Action<object>(SaveUserinfo);
-                Saved += (arg) => { CheckCodeSaved(null, null); };
+                AccountModifyVM.Open = true;
+                AccountModifyVM.Saved += CheckCodeRefresh;
             }
             catch (HttpRequestException requestException)
             {
@@ -237,17 +208,14 @@ namespace BJUTDUHelper.ViewModel
             {
                 GalaSoft.MvvmLight.Messaging.Messenger.Default.Send("验证码错误", messageToken);
 
-                OpenCheckCodeDlg = true;
-                CheckCodeSource = await _coreService.GetCheckCode(_httpService);//获取验证码，非等待，继续执行
-
+                CheckCodeRefresh();
             }
             catch (InvalidUserInfoException userInfoException)
             {
                 GalaSoft.MvvmLight.Messaging.Messenger.Default.Send("用户名或密码错误", messageToken);
 
-                Open = true;
-                Saved = new Action<object>(SaveUserinfo);
-                Saved += (arg) => { OpenCheckCodeDlg = true;CheckCodeRefresh(null, null); };
+                AccountModifyVM.Open = true;
+                AccountModifyVM.Saved += CheckCodeRefresh;
 
             }
             catch (Exception ex)
@@ -255,67 +223,29 @@ namespace BJUTDUHelper.ViewModel
                 GalaSoft.MvvmLight.Messaging.Messenger.Default.Send(ex.Message, messageToken);
             }
         }
-        public async void CheckCodeRefresh(object o, EventArgs e)
+        //刷新验证码的逻辑
+        public async void CheckCodeRefresh()
         {
+            CheckCodeVM.OpenCheckCodeDlg = true;
             var source = await _coreService.GetCheckCode(_httpService);
-            CheckCodeSource = source;
+            CheckCodeVM.CheckCodeSource = source;
         }
 
-        #endregion
+       
 
-        #region 检测是否已经认证过教务系统
-        public async Task<bool> GetAuthState()
-        {
-            if (BJUTEduCenterUserinfo == null)
-            {
-                return false;
-            }
-               var re = await _httpService.GetResponseCode(_coreService.checckAuthUri + BJUTEduCenterUserinfo.Username);
-            if (re == System.Net.HttpStatusCode.OK)
-            {
-                return true;
-            }
-            return false;
-        }
-        #endregion
-
-        #region 用户名密码框逻辑代码
-        //控制用户名密码框的状态
-        private bool _open;
-        public bool Open
-        {
-            get { return _open; }
-            set { Set(ref _open, value); }
-        }
-        private Action<object> _saved;
-        public Action<object> Saved
-        {
-            get { return _saved; }
-            set { Set(ref _saved, value); }
-        }
+       
         //保存用户名密码
-        public async void SaveUserinfo(object o)
+        public async void SaveUserinfo()
         {
-            var user = o as Model.UserBase;
             if(BJUTEduCenterUserinfo==null)
                 BJUTEduCenterUserinfo = new Model.BJUTEduCenterUserinfo();
-            BJUTEduCenterUserinfo.Username = user.Username;
-            BJUTEduCenterUserinfo.Password = user.Password;
+            BJUTEduCenterUserinfo.Username = AccountModifyVM.Username;
+            BJUTEduCenterUserinfo.Password =  AccountModifyVM.Password;
 
-            try
-            {
-                Manager.AccountManager.SetAccount(BJUTEduCenterUserinfo);
-            }
-            catch (NullReferenceException nullRef)
-            {
-                GalaSoft.MvvmLight.Messaging.Messenger.Default.Send<string>(nullRef.Message, messageToken);
-            }
-            catch
-            {
-                GalaSoft.MvvmLight.Messaging.Messenger.Default.Send<string>("保存失败", messageToken);
-            }
-
+            Service.DbService.SaveInfoCenterUserinfo(BJUTEduCenterUserinfo);
+            
+            GalaSoft.MvvmLight.Messaging.Messenger.Default.Send<string>("保存成功", messageToken);
+            
         }
-        #endregion
     }
 }

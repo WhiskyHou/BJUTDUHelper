@@ -230,7 +230,10 @@
             </ListView>
         </Grid>
 
-        <control:AccountModifyDlg Open="{x:Bind BJUTCampusCardVM.Open,Mode=TwoWay}" Saved="{x:Bind BJUTCampusCardVM.Saved,Mode=OneWay}"></control:AccountModifyDlg>
+        <control:AccountModifyDlg Open="{x:Bind BJUTCampusCardVM.AccountModifyVM.Open,Mode=TwoWay}"
+                              Save="{x:Bind BJUTCampusCardVM.AccountModifyVM.Save}"
+                                  Username="{x:Bind BJUTCampusCardVM.AccountModifyVM.Username,Mode=TwoWay}"
+                               Password="{x:Bind BJUTCampusCardVM.AccountModifyVM.Password,Mode=TwoWay}"></control:AccountModifyDlg>
         <control:ProgressBar x:Name="progressBar" Message="{x:Bind BJUTCampusCardVM.ProgressMessage,Mode=OneWay}" Active="{x:Bind BJUTCampusCardVM.Active,Mode=TwoWay}"></control:ProgressBar>
 
     </Grid>

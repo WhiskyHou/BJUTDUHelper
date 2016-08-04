@@ -147,12 +147,15 @@
                 
             </Button>
         </StackPanel>
-        
-        <control:AccountModifyDlg Open="{x:Bind BJUTEduScheduleVM.Open,Mode=TwoWay}" Saved="{x:Bind BJUTEduScheduleVM.Saved,Mode=OneWay}"></control:AccountModifyDlg>
-        <control:CheckCodeDlg Open="{x:Bind BJUTEduScheduleVM.OpenCheckCodeDlg,Mode=TwoWay}" 
-                              ImageSource="{x:Bind BJUTEduScheduleVM.CheckCodeSource,Mode=OneWay}" 
-                              CheckCode="{x:Bind BJUTEduScheduleVM.CheckCode,Mode=TwoWay}" 
-                              Saved="{x:Bind BJUTEduScheduleVM.CheckCodeSaved }"
-                              Refresh="{x:Bind BJUTEduScheduleVM.CheckCodeRefresh}"></control:CheckCodeDlg>
+
+        <control:AccountModifyDlg Open="{x:Bind BJUTEduScheduleVM.AccountModifyVM.Open,Mode=TwoWay}" 
+                                  Save="{x:Bind BJUTEduScheduleVM.AccountModifyVM.Save,Mode=OneWay}"
+                                  Username="{x:Bind BJUTEduScheduleVM.AccountModifyVM.Username,Mode=TwoWay}"
+                                  Password="{x:Bind BJUTEduScheduleVM.AccountModifyVM.Password,Mode=TwoWay}"></control:AccountModifyDlg>
+        <control:CheckCodeDlg Open="{x:Bind BJUTEduScheduleVM.CheckCodeVM.OpenCheckCodeDlg,Mode=TwoWay}" 
+                              ImageSource="{x:Bind BJUTEduScheduleVM.CheckCodeVM.CheckCodeSource,Mode=OneWay}" 
+                              CheckCode="{x:Bind BJUTEduScheduleVM.CheckCodeVM.CheckCode,Mode=TwoWay}" 
+                              Saved="{x:Bind BJUTEduScheduleVM.CheckCodeVM.Save }"
+                              Refresh="{x:Bind BJUTEduScheduleVM.CheckCodeVM.Refresh}"></control:CheckCodeDlg>
     </Grid>
 </Page>

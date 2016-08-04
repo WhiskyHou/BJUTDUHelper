@@ -9,10 +9,10 @@
         
         <ResourceDictionary  >
             <ResourceDictionary.ThemeDictionaries>
-                <ResourceDictionary x:Key="Purple">
-                    <SolidColorBrush x:Key="BJUTDUHelperBaseBackgroundThemeColor" Color="#FFBE3CFD"></SolidColorBrush>
-                </ResourceDictionary>
+                
                 <ResourceDictionary x:Key="Default">
+                    <viewmodel:ViewModelLocator x:Key="Locator"></viewmodel:ViewModelLocator>
+                    
                     <SolidColorBrush x:Key="BJUTDUHelperTitleColor" Color="#FF544F4F"></SolidColorBrush>
                     <SolidColorBrush x:Key="BJUTDUHelperBlackColor" Color="#FFF2F2F2"></SolidColorBrush>
                     <SolidColorBrush x:Key="BJUTDUHelperBaseBackgroundThemeColor" Color="#FF1D91FF"></SolidColorBrush>
@@ -192,19 +192,8 @@
                         <Setter Property="Background" Value="{ThemeResource BJUTDUHelperRedButtonThemeColor}"></Setter>
                     </Style>
                 </ResourceDictionary>
-                <ResourceDictionary x:Key="Green">
-                    <SolidColorBrush x:Key="BJUTDUHelperBaseBackgroundThemeColor" Color="#FF32B434"></SolidColorBrush>
-
-                </ResourceDictionary>
-                <ResourceDictionary x:Key="Pink">
-                    <SolidColorBrush x:Key="BJUTDUHelperBaseBackgroundThemeColor" Color="#FFFA6198"></SolidColorBrush>
-                    
-                </ResourceDictionary>
-                <ResourceDictionary x:Key="Orange">
-                    <SolidColorBrush x:Key="BJUTDUHelperBaseBackgroundThemeColor" Color="#FFFF9923"></SolidColorBrush>
-                </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
-            <viewmodel:ViewModelLocator x:Key="Locator"></viewmodel:ViewModelLocator>
+            
         </ResourceDictionary>
         
     </Application.Resources>

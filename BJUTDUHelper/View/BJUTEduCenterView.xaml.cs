@@ -25,8 +25,10 @@ namespace BJUTDUHelper.View
         public ViewModel.BJUTEduCenterVM BJUTEduCenterVM { get; set; } 
         public BJUTEduCenterView()
         {
+            this.NavigationCacheMode = NavigationCacheMode.Enabled;
             this.InitializeComponent();
             this.Loaded += BJUTEduCenterView_Loaded;
+
             var locator = Application.Current.Resources["Locator"] as ViewModel.ViewModelLocator;
             BJUTEduCenterVM = locator.BJUTEduCenterVM;
             
@@ -36,5 +38,11 @@ namespace BJUTDUHelper.View
         {
             BJUTEduCenterVM.Loaded();
         }
+    }
+
+    public class EduCenterViewParam
+    {
+        public Service.HttpBaseService HttpService { get; set; }
+        public Model.BJUTEduCenterUserinfo BJUTEduCenterUserinfo { get; set; }
     }
 }

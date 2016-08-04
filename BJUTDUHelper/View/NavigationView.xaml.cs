@@ -19,14 +19,14 @@ using System.Diagnostics;
 
 namespace BJUTDUHelper.View
 {
+
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
     public sealed partial class NavigationView : Page
     {
         public ViewModel.NavigationVM NavigationVM { get; set; }
-        
-
+        public static EventHandler<BackRequestedEventArgs> NavigationHnadler;
         public NavigationView()
         {
             
@@ -41,7 +41,9 @@ namespace BJUTDUHelper.View
             DetailFrame.Navigated += DetailFrame_Navigated;
             DetailFrame.Navigate(typeof(View.DefaultDetailView));
 
-            SystemNavigationManager.GetForCurrentView().BackRequested += NavigationView_BackRequested; ;
+            Service.NavigationService.RegHandler(NavigationView_BackRequested);
+            //SystemNavigationManager.GetForCurrentView().BackRequested += NavigationView_BackRequested;
+            NavigationHnadler = NavigationView_BackRequested;
 
             GalaSoft.MvvmLight.Messaging.Messenger.Default.Register<string>(this,"1",
                 (message) =>
@@ -79,7 +81,6 @@ namespace BJUTDUHelper.View
             }
             else
             {
-
             }
         }
 

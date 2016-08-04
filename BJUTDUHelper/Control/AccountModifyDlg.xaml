@@ -64,8 +64,8 @@
                 </Storyboard>
             </Grid.Resources>
             <Rectangle RadiusX="4" RadiusY="4" Grid.Row="0" Grid.RowSpan="3" x:Name="backRect" Fill="{ThemeResource BJUTDUHelperBlackColor}" Height="200" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Opacity="0.5"></Rectangle>
-            <TextBox Grid.Row="0" Text="{x:Bind User.Username,Mode=TwoWay}"  VerticalAlignment="Center" Margin="8,0,8,0" PlaceholderText="账号"></TextBox>
-            <PasswordBox VerticalAlignment="Center" Grid.Row="1" Password="{x:Bind User.Password,Mode=TwoWay}" Margin="8,0,8,0" x:Name="Message" PlaceholderText="密码" ></PasswordBox>
+            <TextBox x:Name="tbUsername" Grid.Row="0" Text="{x:Bind Username,Mode=TwoWay}"  VerticalAlignment="Center" Margin="8,0,8,0" PlaceholderText="账号"></TextBox>
+            <PasswordBox x:Name="tbPassword" VerticalAlignment="Center" Grid.Row="1" Password="{x:Bind Password,Mode=TwoWay}" Margin="8,0,8,0"  PlaceholderText="密码" ></PasswordBox>
             <Grid Grid.Row="2" VerticalAlignment="Center" >
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>

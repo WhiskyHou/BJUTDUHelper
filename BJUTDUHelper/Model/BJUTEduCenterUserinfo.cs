@@ -8,7 +8,7 @@ namespace BJUTDUHelper.Model
 {
     public class BJUTEduCenterUserinfo:UserBase
     {
-        
+
         public EduSystemType EduSystemType { get; set; }
     }
     public enum EduSystemType

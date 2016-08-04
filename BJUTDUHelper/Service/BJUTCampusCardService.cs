@@ -26,8 +26,6 @@ namespace BJUTDUHelper.Service
         {
             try
             {
-                
-
                 Dictionary<string, string> parameters = new Dictionary<string, string>();
                 parameters.Add("Login.Token1", username);
                 parameters.Add("Login.Token2", password);
@@ -38,7 +36,6 @@ namespace BJUTDUHelper.Service
                
                 if (re.Contains("handleLoginSuccessed"))
                 {
-                    
                 }
                 else
                 {
@@ -58,7 +55,6 @@ namespace BJUTDUHelper.Service
         {
             try
             {
-                
                 var re =await  _httpSerice.SendRequst(campusCardLoginUri, HttpMethod.Get);
                 re = await _httpSerice.SendRequst(campusCardAjaxLoginUri, HttpMethod.Get);
             }

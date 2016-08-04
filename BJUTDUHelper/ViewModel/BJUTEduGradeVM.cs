@@ -22,11 +22,13 @@ namespace BJUTDUHelper.ViewModel
             get { return _gradeChart; }
             set { Set(ref _gradeChart, value); }
         }
+
+        private Service.BJUTEduCenterService _coreService;
+        private Model.BJUTEduCenterUserinfo BJUTEduCenterUserinfo { get; set; }
         public BJUTEduGradeVM()
         {
-            //LoadedCommand = new RelayCommand<object>(Loaded);
+            _coreService = new Service.BJUTEduCenterService();
         }
-        //public ICommand LoadedCommand { get; set; }
         public async void Loaded(object parms)
         {
             //加载离线数据
@@ -34,21 +36,15 @@ namespace BJUTDUHelper.ViewModel
 
             if (parms != null)
             {
-                _httpService = parms as Service.HttpBaseService;
-                var user = await Manager.AccountManager.GetAccount<Model.BJUTEduCenterUserinfo>();
-                
-                GetGrade(ViewModel.BJUTEduCenterVM.Name, user.Username);//获取最新数据
+                View.EduCenterViewParam eduCenterViewParam = parms as View.EduCenterViewParam;
+                _httpService = eduCenterViewParam.HttpService;
+                BJUTEduCenterUserinfo = eduCenterViewParam.BJUTEduCenterUserinfo;
+
+                GetGrade(ViewModel.BJUTEduCenterVM.Name, BJUTEduCenterUserinfo.Username);//获取最新数据
             }
           
         }
-        //public ICommand NavigateToCommand { get; set; }
-        //public async void NavigateTo(object o)
-        //{
-        //    _httpService = o as Service.HttpBaseService;
-        //    var user = await Manager.AccountManager.GetAccount<Model.BJUTEduCenterUserinfo>();
-        //    GradeChart = new Model.GradeChart();
-        //    GetGrade(user.Username, user.Password);
-        //}
+
 
         #region 成绩本地管理逻辑
         public async void SaveGradeChart()
@@ -107,43 +103,37 @@ namespace BJUTDUHelper.ViewModel
         }
         #endregion
 
-        #region 工大教务系统页面解析逻辑
         private async void GetGrade(string name, string username)
         {
+            string html = string.Empty;
             try
             {
-                string re;
-                re = await _httpService.SendRequst("http://gdjwgl.bjut.edu.cn/xscjcx.aspx?xh=" + username + "&xm=" + name + "&gnmkdm=N121605", HttpMethod.Get, referUri: "http://gdjwgl.bjut.edu.cn/xscjcx.aspx?xh=" + username + "&xm=" + "" + "&gnmkdm=N121605");
-
-
-                string __VIEWSTATEString;
-                __VIEWSTATEString =Service.BJUTEduCenterService.GetViewstate(re);
-
-                IDictionary<string, string> parameters = new Dictionary<string, string>();
-                parameters.Add("__EVENTTARGET", "");
-                parameters.Add("__EVENTARGUMENT", "");
-                parameters.Add("__VIEWSTATE", __VIEWSTATEString);
-                parameters.Add("hidLanguage", "");
-                parameters.Add("ddlXN", "");
-                parameters.Add("ddlXQ", "");
-                parameters.Add("ddl_kcxz", "");
-                parameters.Add("btn_zcj", "历年成绩");
-
-                re = await _httpService.SendRequst("http://gdjwgl.bjut.edu.cn/xscjcx.aspx?xh=" + username + "&xm=" + "" + "&gnmkdm=N121605", HttpMethod.Post, parameters);
-
+                html=await _coreService.GetGrade(_httpService, name, username);
+                
+            }
+            catch (HttpRequestException requestException)
+            {
+                GalaSoft.MvvmLight.Messaging.Messenger.Default.Send("获取数据失败", messageToken);
+            }
+            catch
+            {
+                GalaSoft.MvvmLight.Messaging.Messenger.Default.Send("意外错误", messageToken);
+                return;
+            }
+            try
+            {
                 if (GradeChart == null)
                 {
                     GradeChart = new Model.GradeChart();
                 }
-                GradeChart.GetGradeChart(re);//解析成绩表
+                GradeChart.GetGradeChart(html);//解析成绩表
                 SaveGradeChart();//保存成绩表
-
             }
-            catch (Exception ex)
+            catch
             {
-                GalaSoft.MvvmLight.Messaging.Messenger.Default.Send("解析成绩出错", messageToken);
+                GalaSoft.MvvmLight.Messaging.Messenger.Default.Send("解析数据失败", messageToken);
             }
+           
         }
-        #endregion
     }
 }

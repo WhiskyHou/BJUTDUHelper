@@ -14,7 +14,11 @@
         <local:BoolVisibiltyConverter x:Key="BoolVisibiltyConverter"></local:BoolVisibiltyConverter>
     </Page.Resources>
     <Grid Background="{ThemeResource BJUTDUHelperBlackColor}">
-       
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
         <ListView Margin="24" ItemsSource="{x:Bind BJUTEduCenterVM.EduNavigationList}"  IsItemClickEnabled="True"
                   ItemClick="{x:Bind BJUTEduCenterVM.ItemClick}"  >
             <ListView.ItemsPanel>
@@ -33,13 +37,26 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <Grid VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Margin="12">
+        <Grid Grid.Row="1" HorizontalAlignment="Stretch" Margin="12">
             <TextBlock Foreground="{ThemeResource BJUTDUHelperBaseBackgroundThemeColor}" Text="已连接到校园网" Visibility="{x:Bind BJUTEduCenterVM.IsConnected, Converter={StaticResource BoolVisibiltyConverter} ,Mode=OneWay}"></TextBlock>
             <TextBlock Foreground="Red" Text="尚未连接到校园网" Visibility="{x:Bind BJUTEduCenterVM.IsConnected, Converter={StaticResource ReBoolVisibiltyConverter},Mode=OneWay}"></TextBlock>
         </Grid>
-        <!--<control:AccountModifyDlg Open="{x:Bind BJUTEduCenterVM.Open,Mode=TwoWay}" SaveCommand="{x:Bind BJUTEduCenterVM.SaveCommand}"></control:AccountModifyDlg>-->
-        <control:AccountModifyDlg Open="{x:Bind BJUTEduCenterVM.Open,Mode=TwoWay}" Saved="{x:Bind BJUTEduCenterVM.Saved,Mode=OneWay}"></control:AccountModifyDlg>
-        <control:CheckCodeDlg Open="{x:Bind BJUTEduCenterVM.OpenCheckCodeDlg,Mode=TwoWay}" ImageSource="{x:Bind BJUTEduCenterVM.CheckCodeSource,Mode=OneWay}" CheckCode="{x:Bind BJUTEduCenterVM.CheckCode,Mode=TwoWay}" Saved="{x:Bind BJUTEduCenterVM.CheckCodeSaved }"
-                              Refresh="{x:Bind BJUTEduCenterVM.CheckCodeRefresh}"></control:CheckCodeDlg>
+
+        <control:AccountModifyDlg Open="{x:Bind BJUTEduCenterVM.AccountModifyVM.Open,Mode=TwoWay}" 
+                                  Save="{x:Bind BJUTEduCenterVM.AccountModifyVM.Save }"
+                                  Username="{x:Bind BJUTEduCenterVM.AccountModifyVM.Username,Mode=TwoWay}"
+                                  Password="{x:Bind BJUTEduCenterVM.AccountModifyVM.Password,Mode=TwoWay}"></control:AccountModifyDlg>
+        <control:CheckCodeDlg Open="{x:Bind BJUTEduCenterVM.CheckCodeVM.OpenCheckCodeDlg,Mode=TwoWay}" 
+                              ImageSource="{x:Bind BJUTEduCenterVM.CheckCodeVM.CheckCodeSource,Mode=OneWay}"
+                              CheckCode="{x:Bind BJUTEduCenterVM.CheckCodeVM.CheckCode,Mode=TwoWay}" 
+                              Saved="{x:Bind BJUTEduCenterVM.CheckCodeVM.Save }"
+                              Refresh="{x:Bind BJUTEduCenterVM.CheckCodeVM.Refresh}"></control:CheckCodeDlg>
+        <Grid Grid.Row="2">
+            <CommandBar ClosedDisplayMode="Minimal">
+                <CommandBar.SecondaryCommands>
+                    <AppBarButton Label="切换账号" Click="{x:Bind BJUTEduCenterVM.ChangeUser}"></AppBarButton>
+                </CommandBar.SecondaryCommands>
+            </CommandBar>
+        </Grid>
     </Grid>
 </Page>

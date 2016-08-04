@@ -28,6 +28,7 @@ namespace BJUTDUHelper.ViewModel
             SimpleIoc.Default.Register<BJUTCampusCardVM>();
             SimpleIoc.Default.Register<BJUTCampusCardTransactionVM>();
             SimpleIoc.Default.Register<BJUTEduExamVM>();
+            SimpleIoc.Default.Register<WIFIHelperVM>();
         }
         public NavigationVM NavigationVM
         {
@@ -69,7 +70,10 @@ namespace BJUTDUHelper.ViewModel
         {
             get { return SimpleIoc.Default.GetInstance<BJUTEduExamVM>(); }
         }
-
+        public WIFIHelperVM WIFIHelperVM
+        {
+            get { return SimpleIoc.Default.GetInstance<WIFIHelperVM>(); }
+        }
 
         public INavigationService CreateNavigationService()
         {

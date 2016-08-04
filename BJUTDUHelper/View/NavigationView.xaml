@@ -463,6 +463,7 @@
                 <ColumnDefinition x:Name="col1" Width="*"/>
                 <ColumnDefinition x:Name="col2" Width="0"/>
             </Grid.ColumnDefinitions>
+            
 
 
             <RelativePanel x:Name="mainPanel" VerticalAlignment="Stretch"  >

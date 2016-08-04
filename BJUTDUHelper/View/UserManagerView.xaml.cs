@@ -45,8 +45,7 @@ namespace BJUTDUHelper.View
 
         private void btnClear_Click(object sender, RoutedEventArgs e)
         {
-            tbPassword.Password = string.Empty;
-            tbUsername.Text = string.Empty;
+            
         }
 
 

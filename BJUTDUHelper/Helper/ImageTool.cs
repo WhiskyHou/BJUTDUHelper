@@ -55,7 +55,7 @@ namespace BJUTDUHelper.Helper
             using (MemoryStream stream = new MemoryStream(imageBuffer))
             {
                 var ras = stream.AsRandomAccessStream();
-                BitmapDecoder decoder = await BitmapDecoder.CreateAsync(BitmapDecoder.JpegDecoderId, ras);
+                BitmapDecoder decoder = await BitmapDecoder.CreateAsync(ras);
                 var provider = await decoder.GetPixelDataAsync();
                 byte[] buffer = provider.DetachPixelData();
                 WriteableBitmap bitmap = new WriteableBitmap((int)decoder.PixelWidth, (int)decoder.PixelHeight);

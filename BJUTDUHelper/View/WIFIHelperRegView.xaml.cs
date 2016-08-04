@@ -42,17 +42,14 @@ namespace BJUTDUHelper.View
             imgRotation.Begin();
 
         }
-
         private void ProgressBar_Closed(object sender, EventArgs e)
         {
-            SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Collapsed;
-            SystemNavigationManager.GetForCurrentView().BackRequested -= ProgressBar_BackRequested;
+            Service.NavigationService.UnRegSingleHandler(ProgressBar_BackRequested);
         }
 
         private void ProgressBar_Acticed(object sender, EventArgs e)
         {
-            SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
-            SystemNavigationManager.GetForCurrentView().BackRequested += ProgressBar_BackRequested;
+            Service.NavigationService.RegSingleHandler(ProgressBar_BackRequested);
         }
 
         private void ProgressBar_BackRequested(object sender, BackRequestedEventArgs e)
@@ -70,11 +67,7 @@ namespace BJUTDUHelper.View
         {
             navigationParam = e.Parameter;
         }
-
-        private void AppBarButton_Click(object sender, RoutedEventArgs e)
-        {
-            this.Frame.Navigate(typeof(View.WIFIHelperAuthView));
-        }
+        
     }
     public class VisibiltyConverter : IValueConverter
     {

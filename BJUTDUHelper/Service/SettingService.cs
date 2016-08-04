@@ -22,7 +22,7 @@ namespace BJUTDUHelper.Service
                 view.TitleBar.ButtonBackgroundColor = color;
                 view.TitleBar.BackgroundColor = color;
 
-                if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent(typeof(StatusBar).ToString()))
+                if ("Windows.Mobile" == Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily)
                 {
                     StatusBar statusBar = Windows.UI.ViewManagement.StatusBar.GetForCurrentView();
                     statusBar.BackgroundOpacity = 1;

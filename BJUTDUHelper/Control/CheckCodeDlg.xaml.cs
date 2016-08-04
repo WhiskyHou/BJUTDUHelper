@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -25,6 +26,11 @@ namespace BJUTDUHelper.Control
             this.Visibility = Visibility.Collapsed;
         }
 
+        private void Backrequest_Handler(object o, BackRequestedEventArgs e)
+        {
+            e.Handled = true;
+            Open = false;
+        }
         public event EventHandler Saved;
         public event EventHandler Refresh;
         public static readonly DependencyProperty OpenProperty = DependencyProperty.Register("Open", typeof(bool), typeof(CheckCodeDlg), new PropertyMetadata(false, (o, e) =>
@@ -35,11 +41,12 @@ namespace BJUTDUHelper.Control
             if (isopen == true)
             {
                 dlg.Visibility = Visibility.Visible;
-
+                Service.NavigationService.RegSingleHandler(dlg.Backrequest_Handler);
             }
             else
             {
                 dlg.Visibility = Visibility.Collapsed;
+                Service.NavigationService.UnRegSingleHandler(dlg.Backrequest_Handler);
             }
         }));
         public bool Open

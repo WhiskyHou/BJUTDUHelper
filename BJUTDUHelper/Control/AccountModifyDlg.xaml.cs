@@ -6,6 +6,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Windows.Input;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -22,40 +23,84 @@ namespace BJUTDUHelper.Control
     {
         public AccountModifyDlg()
         {
+           //this.NavigationCacheMode = NavigationCacheMode.Enabled;
             this.InitializeComponent();
             //this.Visibility = Visibility.Collapsed;
-            this.btnClose.Click += (o, e) => { this.CloseDlgStoryboard.Begin(); Open = false; };
-            this.btnSave.Click += (o, e) => { this.CloseDlgStoryboard.Begin(); Open = false;Saved?.Invoke(User); };
-            User = new Model.UserBase();
+            this.btnClose.Click += BtnClose_Click;
+            this.btnSave.Click += BtnSave_Click;
+            this.DataContext = this;
         }
-        public Model.UserBase User
-        {
-            get { return (Model.UserBase)this.GetValue(UserProperty); }
-            set { SetValue(UserProperty, value); }
-        }
-        public static readonly DependencyProperty UserProperty = DependencyProperty.Register("User", typeof(Model.UserBase), typeof(AccountModifyDlg), new PropertyMetadata(null));
 
-        public ICommand SaveCommand
+        private AppViewBackButtonVisibility orignalStatus;
+        private void GetNavigationHandler()
         {
-            get { return (ICommand)GetValue(SaveCommandProperty); }
-            set { SetValue(SaveCommandProperty, value); }
+            //var view = SystemNavigationManager.GetForCurrentView();
+            //view.BackRequested -= View.NavigationView.NavigationHnadler;
+            //view.BackRequested += View_BackRequested;
+
+            //orignalStatus = SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility;
+            //SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
+
+            Service.NavigationService.RegSingleHandler(View_BackRequested);
         }
-        public static readonly DependencyProperty SaveCommandProperty = DependencyProperty.Register("SaveCommand", typeof(ICommand), typeof(AccountModifyDlg), new PropertyMetadata(null,
-            (o,e)=> 
-            {
-                AccountModifyDlg dlg = o as AccountModifyDlg;
-                dlg.btnSave.Click += (sender, args) => { dlg.SaveCommand?.Execute(dlg.User); };
-            }));
+        private void DisposeNavigationHandler()
+        {
+            //SystemNavigationManager.GetForCurrentView().BackRequested -= View_BackRequested;
+            //SystemNavigationManager.GetForCurrentView().BackRequested += View.NavigationView.NavigationHnadler;
+
+            //SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = orignalStatus;
+
+            Service.NavigationService.UnRegSingleHandler(View_BackRequested);
+        }
+
+        public void View_BackRequested(object sender, BackRequestedEventArgs e)
+        {
+            BtnClose_Click(null, null);
+            e.Handled = true;
+        }
+
+        private void BtnSave_Click(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(tbUsername.Text))
+                tbUsername.Focus(FocusState.Keyboard);
+            if (string.IsNullOrWhiteSpace(tbPassword.Password))
+                tbPassword.Focus(FocusState.Keyboard);
+            this.CloseDlgStoryboard.Begin(); Open = false; Save?.Invoke();
+        }
+
+        private void BtnClose_Click(object sender, RoutedEventArgs e)
+        {
+            this.CloseDlgStoryboard.Begin(); Open = false;
+        }
+
+        public string Username
+        {
+            get { return (string)this.GetValue(UsernameProperty); }
+            set { SetValue(UsernameProperty, value); }
+        }
+        public static readonly DependencyProperty UsernameProperty = DependencyProperty.Register("Username", typeof(string), typeof(AccountModifyDlg), new PropertyMetadata(null));
+        public string Password
+        {
+            get { return (string)this.GetValue(PasswordProperty); }
+            set { SetValue(PasswordProperty, value); }
+        }
+        public static readonly DependencyProperty PasswordProperty = DependencyProperty.Register("Password", typeof(string), typeof(AccountModifyDlg), new PropertyMetadata(null));
+
+        
 
         public static readonly DependencyProperty OpenProperty = DependencyProperty.Register("Open", typeof(bool), typeof(AccountModifyDlg), new PropertyMetadata(false, (o, e) =>
         {
             var dlg = o as AccountModifyDlg;
 
             var isopen = dlg.Open;
-            if (isopen == true)
+            if (isopen)
             {
                 dlg.OpenDlgStoryboard.Begin();
-
+                dlg.GetNavigationHandler();
+            }
+            else if (isopen==false)
+            {
+                dlg.DisposeNavigationHandler();  
             }
         }));
         
@@ -65,13 +110,7 @@ namespace BJUTDUHelper.Control
             set { SetValue(OpenProperty, value); }
         }
 
-
-        //public Action Saved
-        //{
-        //    get { return (Action)GetValue(SavedProperty); }
-        //    set { SetValue(SavedProperty, value); }
-        //}
-        //public static readonly DependencyProperty SavedProperty = DependencyProperty.Register("Saved", typeof(Action), typeof(AccountModifyDlg), new PropertyMetadata(null));
-        public Action<object> Saved { get; set; }
+        public event Action Save;
+        
     }
 }

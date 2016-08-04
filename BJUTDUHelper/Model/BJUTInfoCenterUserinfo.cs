@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
@@ -12,16 +13,8 @@ namespace BJUTDUHelper.Model
 {
     public class BJUTInfoCenterUserinfo:UserBase
     {
-        private InfoCenterAccountInfo _infoCenterAccountInfo;
-
-        public InfoCenterAccountInfo InfoCenterAccountInfo
-        {
-            get { return _infoCenterAccountInfo; }
-            set
-            {
-                _infoCenterAccountInfo = value;
-            }
-        }
+        [NotMapped]
+        public InfoCenterAccountInfo InfoCenterAccountInfo { get; set; }
 
     }
     public class InfoCenterAccountInfo:INotifyPropertyChanged
@@ -61,9 +54,6 @@ namespace BJUTDUHelper.Model
             }
         }
         private string _balance;
-
-        
-
         public string Balance
         {
             get { return _balance; }
