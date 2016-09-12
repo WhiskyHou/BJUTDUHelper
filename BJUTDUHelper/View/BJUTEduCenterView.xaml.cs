@@ -44,5 +44,6 @@ namespace BJUTDUHelper.View
     {
         public Service.HttpBaseService HttpService { get; set; }
         public Model.BJUTEduCenterUserinfo BJUTEduCenterUserinfo { get; set; }
+        public object Other { get; set; }
     }
 }

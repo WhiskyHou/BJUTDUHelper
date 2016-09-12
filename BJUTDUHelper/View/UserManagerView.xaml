@@ -9,7 +9,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d" 
-    local:UserManagerView.LoadedCommand="{x:Bind UserManagerVM.LoadedCommand}" 
       >
     <Page.Resources>
         <local:ColorBrushConverter x:Key="ColorBrushConverter"></local:ColorBrushConverter>
@@ -167,7 +166,13 @@
                                 <Border Grid.Column="0" >
                                     <AutoSuggestBox  SuggestionChosen="{x:Bind UserManagerVM.InfoUser_SuggestionChosen}"
                             Text="{x:Bind UserManagerVM.InfoUser.Username,Mode=TwoWay}"
-                            ItemsSource="{x:Bind UserManagerVM.BJUTInfoCenterUserinfos,Mode=OneWay}" DisplayMemberPath="Username"></AutoSuggestBox>
+                            ItemsSource="{x:Bind UserManagerVM.BJUTInfoCenterUserinfos,Mode=OneWay}" >
+                                        <AutoSuggestBox.ItemTemplate>
+                                            <DataTemplate x:DataType="model:BJUTInfoCenterUserinfo">
+                                                <TextBlock Text="{x:Bind Username,Mode=OneWay}"></TextBlock>
+                                            </DataTemplate>
+                                        </AutoSuggestBox.ItemTemplate>
+                                    </AutoSuggestBox>
                                 </Border>
                                 <Border  x:Name="passbox1" Grid.Column="1">
                                     <PasswordBox Password="{x:Bind UserManagerVM.InfoUser.Password,Mode=TwoWay}"></PasswordBox>
@@ -191,7 +196,13 @@
                                 <Border>
                                     <AutoSuggestBox Grid.Column="0" SuggestionChosen="{x:Bind UserManagerVM.LibUser_SuggestionChosen}"
                             Text="{x:Bind UserManagerVM.LibUser.Username,Mode=TwoWay}"
-                            ItemsSource="{x:Bind UserManagerVM.BJUTLibCenterUserinfos,Mode=OneWay}" DisplayMemberPath="Username"></AutoSuggestBox>
+                            ItemsSource="{x:Bind UserManagerVM.BJUTLibCenterUserinfos,Mode=OneWay}" >
+                                        <AutoSuggestBox.ItemTemplate>
+                                            <DataTemplate x:DataType="model:BJUTLibCenterUserinfo">
+                                                <TextBlock Text="{x:Bind Username,Mode=OneWay}"></TextBlock>
+                                            </DataTemplate>
+                                        </AutoSuggestBox.ItemTemplate>
+                                    </AutoSuggestBox>
                                 </Border>
                                 <Border x:Name="passbox2" Grid.Column="1" >
                                     <PasswordBox  Password="{x:Bind UserManagerVM.LibUser.Password,Mode=TwoWay}"></PasswordBox>
@@ -215,7 +226,13 @@
                                 <Border Grid.Column="0" >
                                     <AutoSuggestBox SuggestionChosen="{x:Bind UserManagerVM.EduUser_SuggestionChosen}"
                             Text="{x:Bind UserManagerVM.EduUser.Username,Mode=TwoWay}"
-                            ItemsSource="{x:Bind UserManagerVM.BJUTEduCenterUserinfos,Mode=OneWay}" DisplayMemberPath="Username"></AutoSuggestBox>
+                            ItemsSource="{x:Bind UserManagerVM.BJUTEduCenterUserinfos,Mode=OneWay}" >
+                                        <AutoSuggestBox.ItemTemplate>
+                                            <DataTemplate x:DataType="model:BJUTEduCenterUserinfo">
+                                                <TextBlock Text="{x:Bind Username,Mode=OneWay}"></TextBlock>
+                                            </DataTemplate>
+                                        </AutoSuggestBox.ItemTemplate>
+                                    </AutoSuggestBox>
                                 </Border>
                                 <Border x:Name="passbox3"  Grid.Column="1">
                                     <PasswordBox  Password="{x:Bind UserManagerVM.EduUser.Password,Mode=TwoWay}"></PasswordBox>

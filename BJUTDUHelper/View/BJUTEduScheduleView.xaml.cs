@@ -93,7 +93,13 @@ namespace BJUTDUHelper.View
             if (schedule == null|| schedule.ScheduleItemList==null)
                 return;
 
-            for(int i = 0; i < schedule.ScheduleItemList.Count; i++)
+            var list = gridSchedule.Children.Where(m => m.GetType() == typeof(Control.ScheduleBlock)).ToList();
+            foreach (var item in list)
+            {
+                gridSchedule.Children.Remove(item);
+            }
+
+            for (int i = 0; i < schedule.ScheduleItemList.Count; i++)
             {
 
                 var item = schedule.ScheduleItemList[i];
@@ -149,6 +155,7 @@ namespace BJUTDUHelper.View
 
         }
 
+        #region 课表分享
         private RenderTargetBitmap scheduleBitpmap;
         private async void btnShare_Click(object sender, RoutedEventArgs e)
         {
@@ -193,6 +200,20 @@ namespace BJUTDUHelper.View
             package.SetBitmap(streamRef);
             deferral.Complete();
         }
+        #endregion
+
+        
     }
-    
+    public class IntSelectedItemConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            return (int)value;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            return (int)value;
+        }
+    }
 }

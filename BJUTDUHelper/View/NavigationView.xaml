@@ -427,7 +427,7 @@
             </Grid>
         </ControlTemplate>
     </Page.Resources>
-    <Grid Background="{ThemeResource BJUTDUHelperBlackColor}">
+    <Grid Background="{StaticResource BJUTDUHelperBlackColor}">
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="ShowModeVisualStateGroup" >
                 <VisualState  x:Name="WideVisualState" >
@@ -483,7 +483,17 @@
                     </Grid>
                 </Grid>
 
-                <TextBlock  Text="点击左上汉堡菜单，开启精彩工大生活" RelativePanel.AlignHorizontalCenterWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True" Foreground="{ThemeResource BJUTDUHelperTitleColor}"></TextBlock>
+                <StackPanel Margin="20" RelativePanel.AlignHorizontalCenterWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True" >
+                    <TextBlock Margin="0,12,0,12" Text="点击左上汉堡菜单，开启精彩工大生活" Foreground="{ThemeResource BJUTDUHelperTitleColor}"></TextBlock>
+                    <TextBlock Margin="0,12,0,12" TextWrapping="Wrap" Foreground="{ThemeResource BJUTDUHelperTitleColor}" Text="初次使用，请前往个人中心录入学号等信息"></TextBlock>
+                    <TextBlock Margin="0,12,0,12" TextWrapping="Wrap" Foreground="{ThemeResource BJUTDUHelperTitleColor}" Text="WIFI连接速度取决于信号强度与网卡性能，连接失败可多次尝试"/>
+                    <TextBlock Margin="0,12,0,12" TextWrapping="Wrap" Foreground="{ThemeResource BJUTDUHelperTitleColor}" Text="连接中途若弹出网页，关掉即可，工大助手将帮助你自动连接"></TextBlock>
+                    
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignLeftWithPanel="True" Margin="20">
+                    <HyperlinkButton Margin="12,0,12,0" Foreground="{StaticResource BJUTDUHelperBaseBackgroundThemeColor}" NavigateUri="http://weibo.com/cjw19951115" Content="微博主页"></HyperlinkButton>
+                    <HyperlinkButton Margin="12,0,12,0" Foreground="{StaticResource BJUTDUHelperBaseBackgroundThemeColor}" NavigateUri="http://www.cjw1115.com" Content="个人主页"></HyperlinkButton>
+                </StackPanel>
                 
                 <SplitView x:Name="splitView"  Grid.Column="0" 
                            OpenPaneLength="150" CompactPaneLength="40" DisplayMode="Overlay"
@@ -510,7 +520,7 @@
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
                             </ListView>
-
+                            
                         </Grid>
 
                     </SplitView.Pane>

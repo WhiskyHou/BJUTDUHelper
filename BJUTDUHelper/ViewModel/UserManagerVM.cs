@@ -21,8 +21,6 @@ namespace BJUTDUHelper.ViewModel
         public UserManagerVM()
         {
             SaveCommand = new RelayCommand<object>(Save);
-            //ClearCommand = new RelayCommand<object>(Clear);
-            LoadedCommand = new RelayCommand(Loaded);
 
             BJUTEduCenterUserinfos = new ObservableCollection<BJUTEduCenterUserinfo>();
             BJUTInfoCenterUserinfos = new ObservableCollection<BJUTInfoCenterUserinfo>();
@@ -31,7 +29,6 @@ namespace BJUTDUHelper.ViewModel
             ThemeColors = new ObservableCollection<ThemeColorModel>();
         }
 
-        public ICommand LoadedCommand { get; set; }
         public void Loaded()
         {
             LoadAccountInfo();//加载本地账号信息
@@ -143,18 +140,18 @@ namespace BJUTDUHelper.ViewModel
         public void InfoUser_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
         {
             BJUTInfoCenterUserinfo user = args.SelectedItem as BJUTInfoCenterUserinfo;
-            InfoUser = user;
+            InfoUser = new BJUTInfoCenterUserinfo { Password = user.Password, Username = user.Username };
         }
         public void EduUser_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
         {
             BJUTEduCenterUserinfo user = args.SelectedItem as BJUTEduCenterUserinfo;
-            EduUser = user;
+            EduUser = new BJUTEduCenterUserinfo { Password = user.Password, Username = user.Username };
 
         }
         public void LibUser_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
         {
             BJUTLibCenterUserinfo user = args.SelectedItem as BJUTLibCenterUserinfo;
-            LibUser = user;
+            LibUser = new BJUTLibCenterUserinfo { Password = user.Password, Username = user.Username };
         }
         #endregion
 

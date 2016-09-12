@@ -17,7 +17,7 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <PackageCertificateKeyFile>BJUTDUHelper_StoreKey.pfx</PackageCertificateKeyFile>
-    <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
+    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
     <AppxBundle>Never</AppxBundle>
     <AppxBundlePlatforms>x86|x64|arm</AppxBundlePlatforms>
     <PackageCertificateThumbprint>5358C45BF6454CF3279C5C8D57299BB9A574337F</PackageCertificateThumbprint>
@@ -108,6 +108,9 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Combobox.xaml.cs">
+      <DependentUpon>Combobox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Control\AccountModifyDlg.xaml.cs">
       <DependentUpon>AccountModifyDlg.xaml</DependentUpon>
     </Compile>
@@ -143,6 +146,7 @@
     <Compile Include="Model\CampusCardInfoModel.cs" />
     <Compile Include="Model\CampusCardNavigationModel.cs" />
     <Compile Include="Model\CampusCardTransactionItemModel.cs" />
+    <Compile Include="Model\EduTimeModel.cs" />
     <Compile Include="Model\EduNavigationModel.cs" />
     <Compile Include="Model\ExamModel.cs" />
     <Compile Include="Model\GradeChartModel.cs" />
@@ -232,6 +236,7 @@
     <Content Include="Images\shcheduleBackground.png" />
     <Content Include="Images\spin.png" />
     <Content Include="Images\spin_28.png" />
+    <Content Include="Images\bjut.png" />
     <Content Include="Images\test.png" />
     <Content Include="Images\timetable.png" />
     <None Include="Package.StoreAssociation.xml" />
@@ -242,6 +247,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Combobox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Control\AccountModifyDlg.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

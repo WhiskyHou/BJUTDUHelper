@@ -38,37 +38,7 @@ namespace BJUTDUHelper.View
 
         private void UserManagerView_Loaded(object sender, RoutedEventArgs e)
         {
-            var command = GetLoadedCommand(this);
-
-            command?.Execute(null);
-        }
-
-        private void btnClear_Click(object sender, RoutedEventArgs e)
-        {
-            
-        }
-
-
-
-
-        public static ICommand GetLoadedCommand(DependencyObject o)
-        {
-            return (ICommand)o.GetValue(LoadedCommandProperty);
-        }
-        public static void SetLoadedCommand(DependencyObject o, ICommand value)
-        {
-            o.SetValue(LoadedCommandProperty, value);
-        }
-        ////public ICommand NavigateToCommand
-        ////{
-        ////    get { return (ICommand)GetValue(NavigateToCommandProperty); }
-        ////    set { SetValue(NavigateToCommandProperty, value); }
-        ////}
-        public static readonly DependencyProperty LoadedCommandProperty = DependencyProperty.Register("LoadedCommand", typeof(ICommand), typeof(UserManagerView), new PropertyMetadata(null));
-
-        private void ListView_ItemClick()
-        {
-
+            UserManagerVM.Loaded();
         }
     }
     public class PlaceHolderTextConvereter : IValueConverter

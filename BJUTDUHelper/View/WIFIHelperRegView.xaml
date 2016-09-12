@@ -116,7 +116,7 @@
         </Grid>
         <CommandBar  VerticalAlignment="Bottom"  ClosedDisplayMode="Minimal">
             <CommandBar.SecondaryCommands>
-                <!--<AppBarButton Label="重新选择WIFI" Click="{x:Bind WIFIHelperRegVM.ReAuth}"></AppBarButton>-->
+                
                 <AppBarButton Label="重新选择WIFI" Click="{x:Bind WIFIHelperRegVM.AppBarButton_Click}"></AppBarButton>
             </CommandBar.SecondaryCommands>
         </CommandBar>

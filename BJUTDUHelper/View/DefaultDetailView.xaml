@@ -7,8 +7,12 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">HamFramework
-        </TextBlock>
+    <Grid Background="{ThemeResource   BJUTDUHelperBlackColor}">
+        <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Center">
+            <Image Source="/images/bjut.png" Stretch="None"/>
+            <TextBlock FontSize="30" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FF457C8C">工大助手嘟PP
+            </TextBlock>
+            <TextBlock FontSize="16" HorizontalAlignment="Center" Text="By：CQ" Foreground="#FF457C8C"></TextBlock>
+        </StackPanel>
     </Grid>
 </Page>

@@ -351,7 +351,7 @@ namespace BJUTDUHelper.ViewModel
 
         }
 
-        public void AppBarButton_Click(object sender, RoutedEventArgs e)
+        public void AppBarButton_Click()
         {
             View.WIFIAuthViewParam param = new View.WIFIAuthViewParam { WIFIHelperVM = WIFIHelperVM };
             NavigationVM.FuncFrame.Navigate(typeof(View.WIFIHelperAuthView), param);

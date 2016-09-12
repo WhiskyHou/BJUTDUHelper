@@ -25,7 +25,15 @@ namespace BJUTDUHelper.Model
     }
     public class ScheduleModel:INotifyPropertyChanged
     {
-        public int _currentWeek = 0;
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void OnPropertyChanged([CallerMemberName]string propertyName = "")
+        {
+            var handler = PropertyChanged;
+            handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+        }
+
+        private int _currentWeek = 0;
         public int CurrentWeek
         {
             get { return _currentWeek; }
@@ -35,7 +43,8 @@ namespace BJUTDUHelper.Model
                 OnPropertyChanged();
             }
         }
-        public int _selectedWeek = -1;
+
+        private int _selectedWeek = -1;
         public int SelectedWeek
         {
             get { return _selectedWeek; }
@@ -46,7 +55,7 @@ namespace BJUTDUHelper.Model
             }
         }
 
-        public int _allWeek = 16;
+        private int _allWeek = 16;
         public int AllWeek
         {
             get { return _allWeek; }
@@ -56,24 +65,15 @@ namespace BJUTDUHelper.Model
                 OnPropertyChanged();
             }
         }
-        private List<ScheduleItem> _scheduleItemList;
-        public List<ScheduleItem> ScheduleItemList
+        private ObservableCollection<ScheduleItem> _scheduleItemList;
+        public ObservableCollection<ScheduleItem> ScheduleItemList
         {
             get { return _scheduleItemList; }
             set { _scheduleItemList = value; OnPropertyChanged(); }
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        public void OnPropertyChanged([CallerMemberName]string propertyName="")
-        {
-            var handler = PropertyChanged;
-            handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-
-        }
-
-
-        public List<int> _weeks;
-        public List<int> Weeks
+        
+        public ObservableCollection<int> _weeks;
+        public ObservableCollection<int> Weeks
         {
             get { return _weeks; }
             set { _weeks = value; OnPropertyChanged(); }
@@ -83,19 +83,19 @@ namespace BJUTDUHelper.Model
         {
             var max= ScheduleItemList.Select(m => m.EndWeek).OrderByDescending(m => m).FirstOrDefault();
             AllWeek = max;
-            var list = new List<int>();
+            var list = new ObservableCollection<int>();
             for(int i = 1; i <= max; i++)
             {
                 list.Add(i);
             }
             Weeks = list;
         }
-        
 
-        public static List<ScheduleItem> GetSchedule(string html)
+        //从html解析课表信息
+        public static ObservableCollection<ScheduleItem> GetSchedule(string html)
         {
-            List<ScheduleItem> list = new
-                List<ScheduleItem>();
+            ObservableCollection<ScheduleItem> list = new
+                ObservableCollection<ScheduleItem>();
             int courseId = 1;
             var htmlParser = new HtmlParser();
             var doc=htmlParser.Parse(html);
@@ -164,12 +164,8 @@ namespace BJUTDUHelper.Model
             }
             return list;
         }
-
-        /// <summary>
-        /// 解析出课程名称，教师，教室等信息
-        /// </summary>
-        /// <param name="source"></param>
-        /// <param name="item"></param>
+        
+        //解析出课程名称，教师，教室等信息
         public static ScheduleItem[] ParseScheduleItem(string source)
         {
             if (!string.IsNullOrEmpty(source))

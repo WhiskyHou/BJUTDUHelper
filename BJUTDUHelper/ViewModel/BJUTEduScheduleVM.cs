@@ -1,5 +1,6 @@
 ﻿
 using BJUTDUHelper.BJUTDUHelperlException;
+using BJUTDUHelper.Model;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using System;
@@ -36,24 +37,84 @@ namespace BJUTDUHelper.ViewModel
         public AccountModifyVM AccountModifyVM { get; set; }
         public  string Name { get; set; }
 
-        private string _yaer;
-        private int _term;
-        private int _week;
-        
-        public string Year
+       
+        private EduTimeModel _eduTime;
+        public EduTimeModel EduTime
         {
-            get { return _yaer; }
-            set { Set(ref _yaer, value); }
+            get { return _eduTime; }
+            set { Set(ref _eduTime, value); }
         }
-        public  int Term
+
+        private string _selectedSchoolYear;
+        public string SelectedSchoolYear
         {
-            get { return _term; }
-            set { Set(ref _term, value); }
+            get { return _selectedSchoolYear; }
+            set { Set(ref _selectedSchoolYear, value); }
         }
-        public  int Week
+
+        private List<string> _shoolYears;
+        public List<string> ShoolYears
         {
-            get { return _week; }
-            set { Set(ref _week, value); }
+            get { return _shoolYears; }
+            set { _shoolYears = value; }
+        }
+
+        private int _selectedTerm = 1;
+        public int SelectedTerm
+        {
+            get { return _selectedTerm; }
+            set { Set(ref _selectedTerm, value); }
+        }
+        private List<int> _terms;
+        public List<int> Terms
+        {
+            get { return _terms; }
+            set { Set(ref _terms, value); }
+        }
+
+        private bool hasLoadLoaclInfo = false;
+        public async void cbTrems_SelectionChanged(object sender,SelectionChangedEventArgs args)
+        {
+            if (hasLoadLoaclInfo == false)
+                return;
+            //if (args.AddedItems != null && args.AddedItems.Count > 0&& EduTime!=null)
+            //{
+            //    if (EduTime.Term == (int)args.AddedItems[0])
+            //    {
+            //        return;
+            //    }
+            //}
+            //else
+            //    return;
+
+            RefreshSpecific();
+        }
+        public async void cbSchoolYears_SelectionChanged(object sender, SelectionChangedEventArgs args)
+        {
+            if (hasLoadLoaclInfo == false)
+                return;
+            //if (args.AddedItems != null && args.AddedItems.Count > 0&&EduTime != null)
+            //{
+            //    if (EduTime.SchoolYear == (string)args.AddedItems[0])
+            //    {
+            //        return;
+            //    }
+            //}
+            //else
+            //    return;
+
+            RefreshSpecific();
+        }
+        public void InitEduTimeList()
+        {
+            Terms = new List<int> { 1, 2 };
+            ShoolYears = new List<string>();
+            for (int i = DateTime.Now.Year - 3; i <= DateTime.Now.Year; i++)
+            {
+                string year = $"{i}-{i + 1}";
+                ShoolYears.Add(year);
+            }
+            
         }
 
         public BJUTEduScheduleVM()
@@ -65,6 +126,8 @@ namespace BJUTDUHelper.ViewModel
 
             AccountModifyVM = new AccountModifyVM();
             AccountModifyVM.Saved += SaveUserinfo;
+
+            InitEduTimeList();
         }
         public async void Loaded(object param)
         {
@@ -73,13 +136,16 @@ namespace BJUTDUHelper.ViewModel
                 View.EduCenterViewParam eduCenterViewParam = param as View.EduCenterViewParam;
                 BJUTEduCenterUserinfo = eduCenterViewParam.BJUTEduCenterUserinfo;
                 _httpService = eduCenterViewParam.HttpService;
-                
+
+                EduTime = eduCenterViewParam.Other as EduTimeModel;
             }
 
-            Year = ViewModel.BJUTEduCenterVM.Year;
-            Term = ViewModel.BJUTEduCenterVM.Term;
-            Week = ViewModel.BJUTEduCenterVM.Week;
-
+            if (EduTime != null)
+            {
+                SelectedSchoolYear = EduTime.SchoolYear;
+                SelectedTerm = EduTime.Term;
+            }
+         
             var scedule= await LoadSchedule();
             if (scedule != null)
             {
@@ -92,10 +158,11 @@ namespace BJUTDUHelper.ViewModel
                 Schedule.Weeks = scedule.Weeks;
                 Schedule.AllWeek = scedule.AllWeek;
 
-                if (ViewModel.BJUTEduCenterVM.Week != 0)
+
+                if (EduTime!=null&&EduTime.Week != 0)
                 {
-                    Schedule.CurrentWeek = ViewModel.BJUTEduCenterVM.Week;
-                    Schedule.SelectedWeek = ViewModel.BJUTEduCenterVM.Week;
+                    Schedule.CurrentWeek = EduTime.Week;
+                    Schedule.SelectedWeek = EduTime.Week;
                 }
                 else
                 {
@@ -103,6 +170,8 @@ namespace BJUTDUHelper.ViewModel
                     Schedule.SelectedWeek = scedule.SelectedWeek;
                 }
             }
+
+            hasLoadLoaclInfo = true;
         }
        
         public async void GetCurrentSchedule(string name,string username)
@@ -124,11 +193,12 @@ namespace BJUTDUHelper.ViewModel
             try
             {
                 var list = Model.ScheduleModel.GetSchedule(html);//获取课表
-                Schedule = new Model.ScheduleModel { ScheduleItemList = list, CurrentWeek = ViewModel.BJUTEduCenterVM.Week, };
+                var temp = new Model.ScheduleModel { ScheduleItemList = list, CurrentWeek = EduTime.Week, };
 
-                Schedule.GetAllWeek();//获取最大周数
-                Schedule.SelectedWeek = ViewModel.BJUTEduCenterVM.Week;
+                temp.GetAllWeek();//获取最大周数
+                temp.SelectedWeek = EduTime.Week;
 
+                Schedule = temp;
                 SaveSchedule();
             }
             catch
@@ -137,7 +207,39 @@ namespace BJUTDUHelper.ViewModel
             }
         }
 
-        
+        public async void GetSpecificSchedule()
+        {
+            string html = string.Empty;
+            try
+            {
+                html = await _coreService.GetSpecificSchedule(_httpService, Name,BJUTEduCenterUserinfo.Username,SelectedSchoolYear,SelectedTerm);
+            }
+            catch (HttpRequestException ex)
+            {
+                GalaSoft.MvvmLight.Messaging.Messenger.Default.Send("获取数据失败", messageToken);
+            }
+            catch
+            {
+                GalaSoft.MvvmLight.Messaging.Messenger.Default.Send("遇到意外错误", messageToken);
+                return;
+            }
+            try
+            {
+                var list = Model.ScheduleModel.GetSchedule(html);//获取课表
+                var temp = new Model.ScheduleModel { ScheduleItemList = list, CurrentWeek = 1, SelectedWeek = 1 };
+
+                temp.GetAllWeek();//获取最大周数
+                Schedule = temp;
+                
+            }
+            catch
+            {
+                GalaSoft.MvvmLight.Messaging.Messenger.Default.Send("解析数据失败", messageToken);
+            }
+        }
+
+
+
 
         #region 本地管理逻辑
         public async void SaveSchedule()
@@ -178,6 +280,29 @@ namespace BJUTDUHelper.ViewModel
                 GalaSoft.MvvmLight.Messaging.Messenger.Default.Send(ex.Message, messageToken);
             }
         }
+        public async void RefreshSpecific()
+        {
+            try
+            {
+                var re = await _coreService.GetAuthState(_httpService, BJUTEduCenterUserinfo.Username);
+                if (re == true)
+                {
+                    GetSpecificSchedule();
+                }
+                else
+                {
+                    CheckCodeRefresh();
+                }
+            }
+            catch (HttpRequestException requestException)
+            {
+                GalaSoft.MvvmLight.Messaging.Messenger.Default.Send("网络错误", messageToken);
+            }
+            catch (Exception ex)
+            {
+                GalaSoft.MvvmLight.Messaging.Messenger.Default.Send(ex.Message, messageToken);
+            }
+        }
 
         //保存验证码后登录并导航
         public async void CheckCodeSaved()
@@ -198,6 +323,7 @@ namespace BJUTDUHelper.ViewModel
             {
                 GalaSoft.MvvmLight.Messaging.Messenger.Default.Send("请输入用户名和密码", messageToken);
                 AccountModifyVM.Open = true;
+                AccountModifyVM.Saved -= CheckCodeRefresh;
                 AccountModifyVM.Saved += CheckCodeRefresh;
             }
             catch (HttpRequestException requestException)
@@ -215,6 +341,7 @@ namespace BJUTDUHelper.ViewModel
                 GalaSoft.MvvmLight.Messaging.Messenger.Default.Send("用户名或密码错误", messageToken);
 
                 AccountModifyVM.Open = true;
+                AccountModifyVM.Saved -= CheckCodeRefresh;
                 AccountModifyVM.Saved += CheckCodeRefresh;
 
             }
@@ -230,9 +357,6 @@ namespace BJUTDUHelper.ViewModel
             var source = await _coreService.GetCheckCode(_httpService);
             CheckCodeVM.CheckCodeSource = source;
         }
-
-       
-
        
         //保存用户名密码
         public async void SaveUserinfo()

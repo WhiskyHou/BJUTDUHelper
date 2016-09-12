@@ -8,6 +8,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Windows.Data.Json;
 using Windows.Graphics.Imaging;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
@@ -20,6 +21,7 @@ namespace BJUTDUHelper.Service
         public readonly string checkCodeUri = "http://gdjwgl.bjut.edu.cn/CheckCode.aspx";
         public readonly string educenterUri = "http://gdjwgl.bjut.edu.cn/default2.aspx";
         public readonly string calendarUri = "http://undergrad.bjut.edu.cn/CalendarFile/CalendarBig.aspx";
+        public readonly string edutimeUri = "http://www.cjw1115.com/BJUTDUHelper/getedutime";
 
         //获取验证码
         public async Task<ImageSource> GetCheckCode(Service.HttpBaseService _httpService)
@@ -107,7 +109,7 @@ namespace BJUTDUHelper.Service
             }
         }
         //获取学年学期信息
-        public async Task<Tuple<string,int,int>> GetEduBasicInfo(Service.HttpBaseService _httpService)
+        public async Task<Model.EduTimeModel> GetEduBasicInfo(Service.HttpBaseService _httpService)
         {
             var re = await _httpService.SendRequst(calendarUri, HttpMethod.Get);
             var p = Regex.Match(re, @"<.*weekteaching.*\s*.*\s*</p>").Value;
@@ -115,7 +117,17 @@ namespace BJUTDUHelper.Service
             var term = Regex.Match(p, @".(?=学期)").Value == "二" ? 2 : 1;
             var week = Regex.Match(p, @"\d*(?=\s*教学)").Value;
 
-            return Tuple.Create(year, term, int.Parse(week));
+            Model.EduTimeModel model = new Model.EduTimeModel();
+            model.SchoolYear = year;
+            model.Term = term;
+            model.Week = int.Parse(week);
+            return model;
+        }
+        public async Task<Model.EduTimeModel> GetEduTime(Service.HttpBaseService _httpService)
+        {
+            var re = await _httpService.SendRequst(edutimeUri, HttpMethod.Get);
+            var model=Newtonsoft.Json.JsonConvert.DeserializeObject<Model.EduTimeModel>(re);
+            return model;
         }
         
         //从页面解析用户姓名
@@ -237,28 +249,29 @@ namespace BJUTDUHelper.Service
             return re;
         }
 
-        //public async void GetHistorySchedule(Service.HttpBaseService _httpService,string name, string username,string year,string term)
-        //{
-        //    
-        //        string re;
-        //        re = await _httpService.SendRequst("http://gdjwgl.bjut.edu.cn/xskbcx.aspx?xh=" + username + "&xm=" + name + "&gnmkdm=N121603", HttpMethod.Get, referUri: "http://gdjwgl.bjut.edu.cn/xs_main.aspx?xh=" + username);
-        //        //re = await _httpService.SendRequst("http://gdjwgl.bjut.edu.cn/xs_main.aspx?xh=" + username, HttpMethod.Get);
+        public async Task<string> GetSpecificSchedule(Service.HttpBaseService _httpService, string name, string username, string year, int term)
+        {
+
+            string re;
+            re = await _httpService.SendRequst("http://gdjwgl.bjut.edu.cn/xskbcx.aspx?xh=" + username + "&xm=" + name + "&gnmkdm=N121603", HttpMethod.Get, referUri: "http://gdjwgl.bjut.edu.cn/xs_main.aspx?xh=" + username);
+            //re = await _httpService.SendRequst("http://gdjwgl.bjut.edu.cn/xs_main.aspx?xh=" + username, HttpMethod.Get);
 
 
-        //        string __VIEWSTATEString;
-        //        __VIEWSTATEString = Service.BJUTEduCenterService.GetViewstate(re);
+            string __VIEWSTATEString;
+            __VIEWSTATEString = Service.BJUTEduCenterService.GetViewstate(re);
+            var __EVENTVALIDATION = Service.BJUTEduCenterService.GetValidation(re);
+            IDictionary<string, string> parameters = new Dictionary<string, string>();
+            parameters.Add("__EVENTVALIDATION", __EVENTVALIDATION);
+            parameters.Add("__EVENTTARGET", "");
+            parameters.Add("__EVENTARGUMENT", "");
+            parameters.Add("__VIEWSTATE", __VIEWSTATEString);
+            parameters.Add("xnd", year);
+            parameters.Add("xqd", term.ToString());
 
-        //        IDictionary<string, string> parameters = new Dictionary<string, string>();
-        //        parameters.Add("__EVENTTARGET", "xqd");
-        //        parameters.Add("__EVENTARGUMENT", "");
-        //        parameters.Add("__VIEWSTATE", __VIEWSTATEString);
-        //        parameters.Add("xnd", year);
-        //        parameters.Add("xqd", term);
+            re = await _httpService.SendRequst("http://gdjwgl.bjut.edu.cn/xskbcx.aspx?xh=" + username + "&xm=" + name + "&gnmkdm=N121603", HttpMethod.Post, parameters);
 
-        //        re = await _httpService.SendRequst("http://gdjwgl.bjut.edu.cn/xskbcx.aspx?xh=" + username + "&xm=" + name + "&gnmkdm=N121603", HttpMethod.Post, parameters);
-
-        //        
-        //}
+            return re;
+        }
     }
 
 }

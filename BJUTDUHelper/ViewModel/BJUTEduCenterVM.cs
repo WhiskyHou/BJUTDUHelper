@@ -77,7 +77,7 @@ namespace BJUTDUHelper.ViewModel
 
             IsConnected=await _coreService.GetConnectedStatus(_httpService);
 
-            GetEduTaskInfo();
+            GetEduTimeInfo();
         }
        
         private Model.EduNavigationModel ClickedItem { get; set; }
@@ -105,6 +105,8 @@ namespace BJUTDUHelper.ViewModel
             //课程表页面特殊，可无网络连接查看
             if (ClickedItem != null && ClickedItem.PageType == typeof(View.BJUTEduScheduleView))
             {
+                param.Other = EduTime;
+
                 NavigationVM.DetailFrame.Navigate(ClickedItem.PageType, param);
                 return;
             }
@@ -215,23 +217,75 @@ namespace BJUTDUHelper.ViewModel
             GalaSoft.MvvmLight.Messaging.Messenger.Default.Send<string>("保存成功", messageToken);
 
         }
-       
+
         #region 获取教学教务基础信息
-        public static string Year { get; set; }
-        public static int Term { get; set; }
-        public static int Week { get; set; }
-        public async void GetEduTaskInfo()
+        private EduTimeModel _eduTime;
+        public EduTimeModel EduTime
         {
+            get { return _eduTime; }
+            set { Set(ref _eduTime, value); }
+        }
+        public async void GetEduTimeInfo()
+        {
+            var loaclEdutime=await GetLocalEdutime();
+            EduTime = loaclEdutime;
+
+            var re=await GetNetEduTime();
+            if (re != null)
+            {
+                EduTime = re;
+                SetLocalEdutime(EduTime);
+            }
+
+        }
+        public async Task<EduTimeModel> GetLocalEdutime()
+        {
+            DAL.LocalSetting _localSetting = new DAL.LocalSetting();
+            var timeinfo = await _localSetting.GetLocalInfo<Model.EduTimeModel>(typeof(Model.EduTimeModel).Name);
+
+            if (timeinfo != null)
+            {
+                //自动调整周数
+                var startDayOfWeek = timeinfo.CreateTime.DayOfWeek;
+                var nowDayOfWeek = DateTime.Now.Date.DayOfWeek;
+
+                var daySpan = DateTime.Now.Date - timeinfo.CreateTime.Date;
+                var weekSpan = daySpan.Days / 7;
+                timeinfo.Week += weekSpan;
+                var dis = nowDayOfWeek - startDayOfWeek;
+                if (dis < 0 && dis > -(int)startDayOfWeek)//这一周之类
+                {
+                    timeinfo.Week++;
+                }
+            }
+
+            return timeinfo;
+        }
+        public async void SetLocalEdutime(EduTimeModel eduTime)
+        {
+            eduTime.CreateTime = DateTime.Now;
+
+            DAL.LocalSetting _localSetting = new DAL.LocalSetting();
+            await _localSetting.SetLocalInfo(typeof(Model.EduTimeModel).Name,EduTime);
+        }
+        public async Task<EduTimeModel> GetNetEduTime()
+        {
+            
+            EduTimeModel eduTime = null;
             try
             {
-                var re = await _coreService.GetEduBasicInfo(_httpService);
-                Year = re.Item1;
-                Term = re.Item2;
-                Week = re.Item3;
+                var re = await _coreService.GetEduTime(_httpService);//自己的服务器
+                if (re == null)
+                {
+                    re=await _coreService.GetEduBasicInfo(_httpService);//学校的教务官网
+                }
+                eduTime = re;
             }
             catch
             {
+                
             }
+            return eduTime;
         }
         #endregion
 
