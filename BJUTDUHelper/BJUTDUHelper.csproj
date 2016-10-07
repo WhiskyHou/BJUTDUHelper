@@ -17,7 +17,7 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <PackageCertificateKeyFile>BJUTDUHelper_StoreKey.pfx</PackageCertificateKeyFile>
-    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
+    <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <AppxBundle>Never</AppxBundle>
     <AppxBundlePlatforms>x86|x64|arm</AppxBundlePlatforms>
     <PackageCertificateThumbprint>5358C45BF6454CF3279C5C8D57299BB9A574337F</PackageCertificateThumbprint>
@@ -173,11 +173,15 @@
     <Compile Include="ViewModel\BJUTEduScheduleVM.cs" />
     <Compile Include="ViewModel\CheckCodeVM.cs" />
     <Compile Include="ViewModel\NavigationVM.cs" />
+    <Compile Include="ViewModel\UserEditVM.cs" />
     <Compile Include="ViewModel\UserManagerVM.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="ViewModel\WIFIHelperAuthVM.cs" />
     <Compile Include="ViewModel\WIFIHelperRegVM.cs" />
     <Compile Include="ViewModel\WIFIHelperVM.cs" />
+    <Compile Include="View\AboutView.xaml.cs">
+      <DependentUpon>AboutView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\BJUTCampusCardTransactionView.xaml.cs">
       <DependentUpon>BJUTCampusCardTransactionView.xaml</DependentUpon>
     </Compile>
@@ -204,6 +208,9 @@
     </Compile>
     <Compile Include="View\NavigationView.xaml.cs">
       <DependentUpon>NavigationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\UserEditPage.xaml.cs">
+      <DependentUpon>UserEditPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\UserManagerView.xaml.cs">
       <DependentUpon>UserManagerView.xaml</DependentUpon>
@@ -275,6 +282,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="View\AboutView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\BJUTCampusCardTransactionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -308,6 +319,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\NavigationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\UserEditPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

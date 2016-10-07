@@ -12,89 +12,55 @@
       >
     <Page.Resources>
         <local:ColorBrushConverter x:Key="ColorBrushConverter"></local:ColorBrushConverter>
-        <Style TargetType="AutoSuggestBox">
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
-            <Setter Property="BorderBrush" Value="{StaticResource BJUTDUHelperBaseBackgroundThemeColor}"></Setter>
-            <Setter Property="Width" Value="140"></Setter>
-            <Setter Property="Height" Value="32"></Setter>
-            <Setter Property="VerticalAlignment" Value="Top" />
-            <Setter Property="IsTabStop" Value="False" />
-            <Setter Property="TextBoxStyle" Value="{StaticResource AutoSuggestBoxTextBoxStyle}" />
+        <!--<Style x:Key="ListViewStyle" TargetType="ListView">
+            <Setter Property="IsTabStop" Value="False"/>
+            <Setter Property="TabNavigation" Value="Once"/>
+            <Setter Property="IsSwipeEnabled" Value="True"/>
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Disabled"/>
+            <Setter Property="ScrollViewer.IsHorizontalRailEnabled" Value="False"/>
+            <Setter Property="ScrollViewer.VerticalScrollMode" Value="Enabled"/>
+            <Setter Property="ScrollViewer.IsVerticalRailEnabled" Value="True"/>
+            <Setter Property="ScrollViewer.ZoomMode" Value="Disabled"/>
+            <Setter Property="ScrollViewer.IsDeferredScrollingEnabled" Value="False"/>
+            <Setter Property="ScrollViewer.BringIntoViewOnFocusChange" Value="True"/>
+            <Setter Property="ItemContainerTransitions">
+                <Setter.Value>
+                    <TransitionCollection>
+                        <AddDeleteThemeTransition/>
+                        <ContentThemeTransition/>
+                        <ReorderThemeTransition/>
+                        <EntranceThemeTransition IsStaggeringEnabled="False"/>
+                    </TransitionCollection>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="ItemsPanel">
+                <Setter.Value>
+                    <ItemsPanelTemplate>
+                        <ItemsStackPanel Orientation="Vertical"/>
+                    </ItemsPanelTemplate>
+                </Setter.Value>
+            </Setter>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="AutoSuggestBox">
-                        <Grid>
-                            <VisualStateManager.VisualStateGroups>
-                                <VisualStateGroup x:Name="Orientation">
-                                    <VisualState x:Name="Landscape"/>
-                                    <VisualState x:Name="Portrait"/>
-                                </VisualStateGroup>
-                            </VisualStateManager.VisualStateGroups>
-                            <TextBox x:Name="TextBox"
-                                    Style="{TemplateBinding TextBoxStyle}" 
-                                    PlaceholderText="{TemplateBinding PlaceholderText}"
-                                    Header="{TemplateBinding Header}"
-                                    Width="{TemplateBinding Width}"
-                                    ScrollViewer.BringIntoViewOnFocusChange="False"
-                                    Canvas.ZIndex="0"
-                                    Margin="0"
-                                    Height="32"
-                                     BorderThickness="0"
-                                    DesiredCandidateWindowAlignment="BottomEdge"/>
-                            <Popup x:Name="SuggestionsPopup">
-                                <Border x:Name="SuggestionsContainer">
-                                    <Border.RenderTransform>
-                                        <TranslateTransform x:Name="UpwardTransform"/>
-                                    </Border.RenderTransform>
-                                    <ListView x:Name="SuggestionsList"
-                                            Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}"
-                                            BorderThickness="{ThemeResource AutoSuggestListBorderThemeThickness}"
-                                            BorderBrush="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"
-                                            DisplayMemberPath="{TemplateBinding DisplayMemberPath}"
-                                            IsItemClickEnabled="True"
-                                            ItemTemplate="{TemplateBinding ItemTemplate}"
-                                            ItemTemplateSelector="{TemplateBinding ItemTemplateSelector}"
-                                            ItemContainerStyle="{TemplateBinding ItemContainerStyle}"
-                                            MaxHeight="{ThemeResource AutoSuggestListMaxHeight}"
-                                            Margin="{ThemeResource AutoSuggestListMargin}">
-                                        <ListView.ItemContainerTransitions>
-                                            <TransitionCollection />
-                                        </ListView.ItemContainerTransitions>
-                                    </ListView>
-                                </Border>
-                            </Popup>
-                        </Grid>
+                    <ControlTemplate TargetType="ListView">
+                        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}">
+                            <ScrollViewer x:Name="ScrollViewer" AutomationProperties.AccessibilityView="Raw" BringIntoViewOnFocusChange="{TemplateBinding ScrollViewer.BringIntoViewOnFocusChange}" HorizontalScrollMode="{TemplateBinding ScrollViewer.HorizontalScrollMode}" HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}" IsHorizontalRailEnabled="{TemplateBinding ScrollViewer.IsHorizontalRailEnabled}" IsHorizontalScrollChainingEnabled="{TemplateBinding ScrollViewer.IsHorizontalScrollChainingEnabled}" IsVerticalScrollChainingEnabled="{TemplateBinding ScrollViewer.IsVerticalScrollChainingEnabled}" IsVerticalRailEnabled="{TemplateBinding ScrollViewer.IsVerticalRailEnabled}" IsDeferredScrollingEnabled="{TemplateBinding ScrollViewer.IsDeferredScrollingEnabled}" TabNavigation="{TemplateBinding TabNavigation}" VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}" VerticalScrollMode="{TemplateBinding ScrollViewer.VerticalScrollMode}" ZoomMode="{TemplateBinding ScrollViewer.ZoomMode}">
+                                <StackPanel>
+                                    <ItemsPresenter FooterTransitions="{TemplateBinding FooterTransitions}" FooterTemplate="{TemplateBinding FooterTemplate}" Footer="{TemplateBinding Footer}" HeaderTemplate="{TemplateBinding HeaderTemplate}" Header="{TemplateBinding Header}" HeaderTransitions="{TemplateBinding HeaderTransitions}" Padding="{TemplateBinding Padding}"/>
+                                    
+                                </StackPanel>
+                            </ScrollViewer>
+                        </Border>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
-        </Style>
+        </Style>-->
 
     </Page.Resources>
     <Grid  Background="{ThemeResource BJUTDUHelperBlackColor}">
-        <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup>
-                <VisualState x:Name="wide">
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="480"></AdaptiveTrigger>
-                    </VisualState.StateTriggers>
-                </VisualState>
-                <VisualState x:Name="narrow">
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="0"></AdaptiveTrigger>
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter  Target="passbox1.(Grid.Row)" Value="1"></Setter>
-                        <Setter  Target="passbox1.(Grid.Column)" Value="0"></Setter>
-                        <Setter  Target="passbox2.(Grid.Row)" Value="1"></Setter>
-                        <Setter  Target="passbox2.(Grid.Column)" Value="0"></Setter>
-                        <Setter  Target="passbox3.(Grid.Row)" Value="1"></Setter>
-                        <Setter  Target="passbox3.(Grid.Column)" Value="0"></Setter>
-                    </VisualState.Setters>
-                </VisualState>
 
-            </VisualStateGroup>
-        </VisualStateManager.VisualStateGroups>
         <Pivot>
             <PivotItem Header="账号管理">
                 <ScrollViewer HorizontalScrollMode="Disabled" VerticalScrollMode="Enabled" VerticalScrollBarVisibility="Hidden">
@@ -125,10 +91,95 @@
                                 <Setter Property="Width" Value="140"></Setter>
                             </Style>
                             <Style TargetType="Button" BasedOn="{StaticResource  GreenButtonStyle}">
-
-
+                                <Setter Property="Margin" Value="12,0,0,0"></Setter>
                             </Style>
+                            <Style TargetType="Button" x:Key="DeleteButton">
+                                <Setter Property="Height" Value="40"/>
+                                <Setter Property="Width" Value="40"></Setter>
+                                <Setter Property="Foreground" Value="Red"></Setter>
+                                <Setter Property="BorderThickness" Value="0"/>
+                                <Setter Property="HorizontalAlignment" Value="Stretch"></Setter>
+                                <Setter Property="VerticalAlignment" Value="Stretch"></Setter>
+                                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate>
+                                            <Grid x:Name="RootGrid" Background="Transparent">
+                                                <VisualStateManager.VisualStateGroups>
+                                                    <VisualStateGroup>
+                                                        <VisualState x:Name="Normal">
+                                                            <Storyboard></Storyboard>
+                                                        </VisualState>
+                                                        <VisualState x:Name="PointerOver">
+                                                            <Storyboard>
+                                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Rectangle" Storyboard.TargetProperty="Visibility">
+                                                                    <DiscreteObjectKeyFrame Value="Visible" KeyTime="0"></DiscreteObjectKeyFrame>
+                                                                </ObjectAnimationUsingKeyFrames>
+                                                            </Storyboard>
+                                                        </VisualState>
+                                                        <VisualState x:Name="Pressed">
+                                                            <Storyboard>
+                                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Rectangle" Storyboard.TargetProperty="Visibility">
+                                                                    <DiscreteObjectKeyFrame Value="Visible" KeyTime="0"></DiscreteObjectKeyFrame>
+                                                                </ObjectAnimationUsingKeyFrames>
+                                                            </Storyboard>
+                                                        </VisualState>
+                                                    </VisualStateGroup>
+                                                </VisualStateManager.VisualStateGroups>
+                                                
+                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"></ContentPresenter>
+                                                <Rectangle x:Name="Rectangle" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Opacity="0.5" Fill="Gray" Visibility="Collapsed"></Rectangle>
+                                            </Grid>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                            <Style TargetType="Button" x:Key="EditButton">
+                                <Setter Property="Height" Value="40"/>
+                                <Setter Property="Width" Value="40"></Setter>
+                                <Setter Property="Foreground" Value="Green"></Setter>
+                                <Setter Property="BorderThickness" Value="0"/>
+                                <Setter Property="HorizontalAlignment" Value="Stretch"></Setter>
+                                <Setter Property="VerticalAlignment" Value="Stretch"></Setter>
+                                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate>
+                                            <Grid x:Name="RootGrid" Background="Transparent">
+                                                <VisualStateManager.VisualStateGroups>
+                                                    <VisualStateGroup>
+                                                        <VisualState x:Name="Normal">
+                                                            <Storyboard></Storyboard>
+                                                        </VisualState>
+                                                        <VisualState x:Name="PointerOver">
+                                                            <Storyboard>
+                                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Rectangle" Storyboard.TargetProperty="Visibility">
+                                                                    <DiscreteObjectKeyFrame Value="Visible" KeyTime="0"></DiscreteObjectKeyFrame>
+                                                                </ObjectAnimationUsingKeyFrames>
+                                                            </Storyboard>
+                                                        </VisualState>
+                                                        <VisualState x:Name="Pressed">
+                                                            <Storyboard>
+                                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Rectangle" Storyboard.TargetProperty="Visibility">
+                                                                    <DiscreteObjectKeyFrame Value="Visible" KeyTime="0"></DiscreteObjectKeyFrame>
+                                                                </ObjectAnimationUsingKeyFrames>
+                                                            </Storyboard>
+                                                        </VisualState>
+                                                    </VisualStateGroup>
+                                                </VisualStateManager.VisualStateGroups>
 
+                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"></ContentPresenter>
+                                                <Rectangle x:Name="Rectangle" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Opacity="0.5" Fill="Gray" Visibility="Collapsed"></Rectangle>
+                                            </Grid>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                            <Style TargetType="StackPanel">
+                                <Setter Property="Margin" Value="0,4,0,4"></Setter>
+                            </Style>
                         </StackPanel.Resources>
 
                         <StackPanel >
@@ -146,100 +197,101 @@
                                 <Border Grid.Column="0">
                                     <TextBox   Text="{x:Bind UserManagerVM.StudentID,Mode=TwoWay}"></TextBox>
                                 </Border>
-
-                                <Button Grid.Column="2" Content="保存"  Command="{x:Bind UserManagerVM.SaveCommand}" CommandParameter="StudentID"  ></Button>
+                                <Button Grid.Column="2" Content="保存"   Click="{x:Bind UserManagerVM.SetMainID}" ></Button>
                             </Grid>
 
                         </StackPanel>
                         <StackPanel Grid.Row="1">
                             <TextBlock>信息门户</TextBlock>
-                            <Grid >
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="auto"/>
-                                    <ColumnDefinition Width="auto"/>
-                                    <ColumnDefinition Width="auto"/>
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="auto"/>
-                                    <RowDefinition Height="auto"/>
-                                </Grid.RowDefinitions>
-                                <Border Grid.Column="0" >
-                                    <AutoSuggestBox  SuggestionChosen="{x:Bind UserManagerVM.InfoUser_SuggestionChosen}"
-                            Text="{x:Bind UserManagerVM.InfoUser.Username,Mode=TwoWay}"
-                            ItemsSource="{x:Bind UserManagerVM.BJUTInfoCenterUserinfos,Mode=OneWay}" >
-                                        <AutoSuggestBox.ItemTemplate>
-                                            <DataTemplate x:DataType="model:BJUTInfoCenterUserinfo">
-                                                <TextBlock Text="{x:Bind Username,Mode=OneWay}"></TextBlock>
-                                            </DataTemplate>
-                                        </AutoSuggestBox.ItemTemplate>
-                                    </AutoSuggestBox>
-                                </Border>
-                                <Border  x:Name="passbox1" Grid.Column="1">
-                                    <PasswordBox Password="{x:Bind UserManagerVM.InfoUser.Password,Mode=TwoWay}"></PasswordBox>
-                                </Border>
-
-                                <Button Grid.Column="2" Content="保存" Command="{x:Bind UserManagerVM.SaveCommand}" CommandParameter="BJUTInfoCenterUserinfo"  ></Button>
-                            </Grid>
+                            <ListView ItemsSource="{x:Bind UserManagerVM.BJUTInfoCenterUserinfos,Mode=OneWay}" >
+                                <ListView.ItemContainerStyle>
+                                    <Style TargetType="ListViewItem">
+                                        <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+                                    </Style>
+                                </ListView.ItemContainerStyle>
+                                <ListView.ItemTemplate>
+                                    <DataTemplate x:DataType="model:UserBase">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition Width="auto"/>
+                                                <ColumnDefinition Width="auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock VerticalAlignment="Center" Text="{x:Bind Username,Mode=OneWay}"></TextBlock>
+                                            <Button Grid.Column="1" Style="{StaticResource EditButton}" Click="EditInfoClick">
+                                                <TextBlock Text="&#xE70F;" FontFamily="Segoe MDL2 Assets" ></TextBlock>
+                                            </Button>
+                                            <Button Grid.Column="2" Style="{StaticResource DeleteButton}" Click="DeleteInfoClick">
+                                                <TextBlock Text="&#xE107;" FontFamily="Segoe MDL2 Assets" ></TextBlock>
+                                            </Button>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                            <Button Content="添加新账号"  Command="{x:Bind UserManagerVM.SaveCommand}" CommandParameter="BJUTInfoCenterUserinfo"  ></Button>
                         </StackPanel>
                         <StackPanel Grid.Row="2">
                             <TextBlock>图书馆</TextBlock>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="auto"/>
-                                    <ColumnDefinition Width="auto"/>
-                                    <ColumnDefinition Width="auto"/>
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="auto"/>
-                                    <RowDefinition Height="auto"/>
-                                </Grid.RowDefinitions>
-                                <Border>
-                                    <AutoSuggestBox Grid.Column="0" SuggestionChosen="{x:Bind UserManagerVM.LibUser_SuggestionChosen}"
-                            Text="{x:Bind UserManagerVM.LibUser.Username,Mode=TwoWay}"
-                            ItemsSource="{x:Bind UserManagerVM.BJUTLibCenterUserinfos,Mode=OneWay}" >
-                                        <AutoSuggestBox.ItemTemplate>
-                                            <DataTemplate x:DataType="model:BJUTLibCenterUserinfo">
-                                                <TextBlock Text="{x:Bind Username,Mode=OneWay}"></TextBlock>
-                                            </DataTemplate>
-                                        </AutoSuggestBox.ItemTemplate>
-                                    </AutoSuggestBox>
-                                </Border>
-                                <Border x:Name="passbox2" Grid.Column="1" >
-                                    <PasswordBox  Password="{x:Bind UserManagerVM.LibUser.Password,Mode=TwoWay}"></PasswordBox>
-                                </Border>
+                            <ListView 
+                                SelectionMode="Single"
+                                IsItemClickEnabled="True"
+                                ItemsSource="{x:Bind UserManagerVM.BJUTLibCenterUserinfos,Mode=OneWay}" >
+                                <ListView.ItemContainerStyle>
+                                    <Style TargetType="ListViewItem">
+                                        <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+                                    </Style>
+                                </ListView.ItemContainerStyle>
+                                <ListView.ItemTemplate>
+                                    <DataTemplate x:DataType="model:UserBase">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition Width="auto"/>
+                                                <ColumnDefinition Width="auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock VerticalAlignment="Center" Text="{x:Bind Username,Mode=OneWay}"></TextBlock>
+                                            <Button Grid.Column="1" Style="{StaticResource EditButton}" Click="EditLibClick">
+                                                <TextBlock Text="&#xE70F;" FontFamily="Segoe MDL2 Assets" ></TextBlock>
+                                            </Button>
+                                            
+                                            <Button Grid.Column="2" Style="{StaticResource DeleteButton}" Click="DeleteLibClick" >
+                                                <TextBlock Text="&#xE107;" FontFamily="Segoe MDL2 Assets" ></TextBlock>
+                                            </Button>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
 
-                                <Button Grid.Column="2" Content="保存" Command="{x:Bind UserManagerVM.SaveCommand}" CommandParameter="BJUTLibCenterUserinfo"  ></Button>
-                            </Grid>
+                            <Button  Content="添加新账号" Command="{x:Bind UserManagerVM.SaveCommand}" CommandParameter="BJUTLibCenterUserinfo"  ></Button>
                         </StackPanel>
                         <StackPanel Grid.Row="3">
                             <TextBlock>教务管理</TextBlock>
-                            <Grid >
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="auto"/>
-                                    <ColumnDefinition Width="auto"/>
-                                    <ColumnDefinition Width="auto"/>
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="auto"/>
-                                    <RowDefinition Height="auto"/>
-                                </Grid.RowDefinitions>
-                                <Border Grid.Column="0" >
-                                    <AutoSuggestBox SuggestionChosen="{x:Bind UserManagerVM.EduUser_SuggestionChosen}"
-                            Text="{x:Bind UserManagerVM.EduUser.Username,Mode=TwoWay}"
-                            ItemsSource="{x:Bind UserManagerVM.BJUTEduCenterUserinfos,Mode=OneWay}" >
-                                        <AutoSuggestBox.ItemTemplate>
-                                            <DataTemplate x:DataType="model:BJUTEduCenterUserinfo">
-                                                <TextBlock Text="{x:Bind Username,Mode=OneWay}"></TextBlock>
-                                            </DataTemplate>
-                                        </AutoSuggestBox.ItemTemplate>
-                                    </AutoSuggestBox>
-                                </Border>
-                                <Border x:Name="passbox3"  Grid.Column="1">
-                                    <PasswordBox  Password="{x:Bind UserManagerVM.EduUser.Password,Mode=TwoWay}"></PasswordBox>
-                                </Border>
-
-                                <Button Grid.Column="2" Content="保存" Command="{x:Bind UserManagerVM.SaveCommand}" CommandParameter="BJUTEduCenterUserinfo"  ></Button>
-                            </Grid>
+                            <ListView ItemsSource="{x:Bind UserManagerVM.BJUTEduCenterUserinfos,Mode=OneWay}" >
+                                <ListView.ItemContainerStyle>
+                                    <Style TargetType="ListViewItem">
+                                        <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+                                    </Style>
+                                </ListView.ItemContainerStyle>
+                                <ListView.ItemTemplate>
+                                    <DataTemplate x:DataType="model:UserBase">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition Width="auto"/>
+                                                <ColumnDefinition Width="auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock VerticalAlignment="Center" Text="{x:Bind Username,Mode=OneWay}"></TextBlock>
+                                            <Button Grid.Column="1" Style="{StaticResource EditButton}" Click="EditEduClick">
+                                                <TextBlock Text="&#xE70F;" FontFamily="Segoe MDL2 Assets" ></TextBlock>
+                                            </Button>
+                                            <Button Grid.Column="2" Style="{StaticResource DeleteButton}" Click="DeleteEduClick">
+                                                <TextBlock Text="&#xE107;" FontFamily="Segoe MDL2 Assets" ></TextBlock>
+                                            </Button>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                            <Button  Content="添加新账号" Command="{x:Bind UserManagerVM.SaveCommand}" CommandParameter="BJUTEduCenterUserinfo"  ></Button>
                         </StackPanel>
                     </StackPanel>
                 </ScrollViewer>

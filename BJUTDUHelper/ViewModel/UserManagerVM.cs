@@ -21,6 +21,7 @@ namespace BJUTDUHelper.ViewModel
         public UserManagerVM()
         {
             SaveCommand = new RelayCommand<object>(Save);
+            
 
             BJUTEduCenterUserinfos = new ObservableCollection<BJUTEduCenterUserinfo>();
             BJUTInfoCenterUserinfos = new ObservableCollection<BJUTInfoCenterUserinfo>();
@@ -91,67 +92,108 @@ namespace BJUTDUHelper.ViewModel
         public ICommand SaveCommand { get; set; }
         public void Save(object param)
         {
-            string type = (string)param;
-            switch (type)
-            {
-                case "BJUTInfoCenterUserinfo":
-                    if (InfoUser == null || string.IsNullOrWhiteSpace(InfoUser.Password) || string.IsNullOrWhiteSpace(InfoUser.Username))
-                        return;
-                    Service.DbService.SaveInfoCenterUserinfo(InfoUser);
-                    break;
-                case "BJUTLibCenterUserinfo":
-                    if (LibUser == null || string.IsNullOrWhiteSpace(LibUser.Password) || string.IsNullOrWhiteSpace(LibUser.Username))
-                        return;
-                    Service.DbService.SaveInfoCenterUserinfo(LibUser); break;
-                case "BJUTEduCenterUserinfo":
-                    if (EduUser == null || string.IsNullOrWhiteSpace(EduUser.Password) || string.IsNullOrWhiteSpace(EduUser.Username))
-                        return;
-                    Service.DbService.SaveInfoCenterUserinfo(EduUser); break;
-                case "StudentID":
-                    Service.FileService.SetStudentID(StudentID); break;
-                default:
-                    break;
-            }
+            string usertype = (string)param;
+            View.UserEditNaviParam naviParam = new View.UserEditNaviParam();
 
+            naviParam.BJUTEduCenterUserinfos = BJUTEduCenterUserinfos;
+            naviParam.BJUTInfoCenterUserinfos = BJUTInfoCenterUserinfos;
+            naviParam.BJUTLibCenterUserinfos = BJUTLibCenterUserinfos;
+
+            naviParam.UserType = usertype;
+            NavigationVM.DetailFrame.Navigate(typeof(View.UserEditPage), naviParam);
         }
-        private async void LoadAccountInfo()
+        private  void LoadAccountInfo()
         {
             StudentID = Service.FileService.GetStudentID();
 
             var infouser=Service.DbService.GetInfoCenterUserinfo<Model.BJUTInfoCenterUserinfo>();
+            BJUTInfoCenterUserinfos.Clear();
             foreach (var item in infouser)
             {
                 BJUTInfoCenterUserinfos.Add(item);
             }
 
             var eduuser = Service.DbService.GetInfoCenterUserinfo<Model.BJUTEduCenterUserinfo>();
+            BJUTEduCenterUserinfos.Clear();
             foreach (var item in eduuser)
             {
                 BJUTEduCenterUserinfos.Add(item);
             }
 
             var libuser = Service.DbService.GetInfoCenterUserinfo<Model.BJUTLibCenterUserinfo>();
+            BJUTLibCenterUserinfos.Clear();
             foreach (var item in libuser)
             {
                 BJUTLibCenterUserinfos.Add(item);
             }
         }
 
-        public void InfoUser_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
+        public void SetMainID()
         {
-            BJUTInfoCenterUserinfo user = args.SelectedItem as BJUTInfoCenterUserinfo;
-            InfoUser = new BJUTInfoCenterUserinfo { Password = user.Password, Username = user.Username };
+            Service.FileService.SetStudentID(StudentID);
+            GalaSoft.MvvmLight.Messaging.Messenger.Default.Send("设置学号成功", messageToken);
         }
-        public void EduUser_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
-        {
-            BJUTEduCenterUserinfo user = args.SelectedItem as BJUTEduCenterUserinfo;
-            EduUser = new BJUTEduCenterUserinfo { Password = user.Password, Username = user.Username };
 
-        }
-        public void LibUser_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
+        public void EditInfoClick(string username)
         {
-            BJUTLibCenterUserinfo user = args.SelectedItem as BJUTLibCenterUserinfo;
-            LibUser = new BJUTLibCenterUserinfo { Password = user.Password, Username = user.Username };
+            View.UserEditNaviParam naviParam = new View.UserEditNaviParam();
+            naviParam.UserType = "BJUTInfoCenterUserinfo";
+
+            var user=Service.DbService.GetInfoCenterUserinfo<Model.BJUTInfoCenterUserinfo>().Where(m=>m.Username==username).FirstOrDefault();
+            naviParam.User = user;
+            NavigationVM.DetailFrame.Navigate(typeof(View.UserEditPage), naviParam);
+        }
+        public void EditLibClick(string username)
+        {
+            View.UserEditNaviParam naviParam = new View.UserEditNaviParam();
+            naviParam.UserType = "BJUTLibCenterUserinfo";
+
+            var user = Service.DbService.GetInfoCenterUserinfo<Model.BJUTLibCenterUserinfo>().Where(m => m.Username == username).FirstOrDefault();
+            naviParam.User = user;
+            NavigationVM.DetailFrame.Navigate(typeof(View.UserEditPage), naviParam);
+        }
+        public void EditEduClick(string username)
+        {
+            View.UserEditNaviParam naviParam = new View.UserEditNaviParam();
+            naviParam.UserType = "BJUTEduCenterUserinfo";
+
+            var user = Service.DbService.GetInfoCenterUserinfo<Model.BJUTEduCenterUserinfo>().Where(m => m.Username == username).FirstOrDefault();
+            naviParam.User = user;
+            NavigationVM.DetailFrame.Navigate(typeof(View.UserEditPage), naviParam);
+        }
+
+
+        public void DeleteLibClick(string username)
+        {
+            var user = BJUTLibCenterUserinfos.Where(m => m.Username == username).FirstOrDefault();
+            if (user != null)
+            {
+                BJUTLibCenterUserinfos.Remove(user);
+            }
+
+            Service.DbService.RemoveInfoCenterUserinfo<Model.BJUTLibCenterUserinfo>(username);
+            GalaSoft.MvvmLight.Messaging.Messenger.Default.Send("删除成功", messageToken);
+        }
+        public void DeleteEduClick(string username)
+        {
+            var user = BJUTEduCenterUserinfos.Where(m => m.Username == username).FirstOrDefault();
+            if (user != null)
+            {
+                BJUTEduCenterUserinfos.Remove(user);
+            }
+
+            Service.DbService.RemoveInfoCenterUserinfo<Model.BJUTEduCenterUserinfo>(username);
+            GalaSoft.MvvmLight.Messaging.Messenger.Default.Send("删除成功", messageToken);
+        }
+        public void DeleteInfoClick(string username)
+        {
+            var user = BJUTInfoCenterUserinfos.Where(m => m.Username == username).FirstOrDefault();
+            if (user != null)
+            {
+                BJUTInfoCenterUserinfos.Remove(user);
+            }
+            Service.DbService.RemoveInfoCenterUserinfo<Model.BJUTInfoCenterUserinfo>(username);
+            GalaSoft.MvvmLight.Messaging.Messenger.Default.Send("删除成功", messageToken);
         }
         #endregion
 

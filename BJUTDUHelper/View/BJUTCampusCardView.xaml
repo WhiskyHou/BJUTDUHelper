@@ -192,7 +192,7 @@
                     <RowDefinition/>
                 </Grid.RowDefinitions>
                 <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="4">
-                    <TextBlock  x:Name="tbkAccount"   Text="银行卡账号：" VerticalAlignment="Center"></TextBlock>
+                    <TextBlock  x:Name="tbkAccount"   Text="绑定卡号：" VerticalAlignment="Center"></TextBlock>
                     <TextBox x:Name="tbAccount" VerticalAlignment="Center" VerticalContentAlignment="Center" BorderThickness="1,0,1,0"  IsReadOnly="True" Text="{x:Bind BJUTCampusCardVM.CampusCardInfoModel.smtAccounts,Mode=OneWay}" ></TextBox>
                 </StackPanel>
                 <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="4">

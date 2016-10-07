@@ -29,7 +29,7 @@ namespace BJUTDUHelper.View
         public static EventHandler<BackRequestedEventArgs> NavigationHnadler;
         public NavigationView()
         {
-            
+
             this.InitializeComponent();
             this.Loaded += NavigationView_Loaded;
             var locator = Application.Current.Resources["Locator"] as ViewModel.ViewModelLocator;
@@ -37,46 +37,43 @@ namespace BJUTDUHelper.View
             ViewModel.NavigationVM.DetailFrame = this.DetailFrame;
             ViewModel.NavigationVM.FuncFrame = this.FuncFrame;
 
-            
+
             DetailFrame.Navigated += DetailFrame_Navigated;
             DetailFrame.Navigate(typeof(View.DefaultDetailView));
 
-            Service.NavigationService.RegHandler(NavigationView_BackRequested);
-            //SystemNavigationManager.GetForCurrentView().BackRequested += NavigationView_BackRequested;
             NavigationHnadler = NavigationView_BackRequested;
+            //注册后退处理事件
+            Service.NavigationService.RegHandler(NavigationView_BackRequested);
 
-            GalaSoft.MvvmLight.Messaging.Messenger.Default.Register<string>(this,"1",
+            GalaSoft.MvvmLight.Messaging.Messenger.Default.Register<string>(this, "1",
                 (message) =>
-                {   
+                {
                     messageDlg.Show(message);
                 });
-
-            
         }
 
-        
 
         private void NavigationView_BackRequested(object sender, BackRequestedEventArgs e)
         {
-            if (this.DetailFrame.BackStackDepth>1)
+            if (this.DetailFrame.BackStackDepth > 1)
             {
-                
                 this.DetailFrame.GoBack();
                 e.Handled = true;
             }
-            else if(this.DetailFrame.BackStackDepth ==1)
+            else if (this.DetailFrame.BackStackDepth == 1)
             {
                 this.DetailFrame.GoBack();
                 e.Handled = true;
                 SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Collapsed;
                 var currentState = ShowModeVisualStateGroup.CurrentState;
+
                 if (currentState == null || currentState == NarrowVisualState || currentState == NormalVisualState)
                 {
-                    VisualStateManager.GoToState(this, "NormalVisualState", false);
+                    VisualStateManager.GoToState(this, "NormalVisualState", false);//详情页已经无内容，窄屏幕模式
                 }
                 else
                 {
-                    VisualStateManager.GoToState(this, "WideVisualState", false);
+                    VisualStateManager.GoToState(this, "WideVisualState", false);// 详情页已经无内容，宽屏幕模式
                 }
             }
             else
@@ -93,9 +90,9 @@ namespace BJUTDUHelper.View
         {
             if (e.SourcePageType == typeof(View.DefaultDetailView))
             {
-                
+
             }
-            else
+            else//详情页有非默认内容，如果当前事宽屏模式，则不做响应，如果是窄屏幕，则优先展示详情页，用窄视图
             {
                 SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
                 var currentState = ShowModeVisualStateGroup.CurrentState;
@@ -104,7 +101,7 @@ namespace BJUTDUHelper.View
                     VisualStateManager.GoToState(this, "NarrowVisualState", false);
                 }
             }
-           
+
         }
 
         Grid paneGrid;
@@ -114,7 +111,7 @@ namespace BJUTDUHelper.View
             paneGrid = findre as Grid;
             trans = paneGrid.RenderTransform as CompositeTransform;
 
-            
+
             findre.ManipulationCompleted += Pane_ManipulationCompleted;
             findre.ManipulationMode = ManipulationModes.TranslateX;
             findre.ManipulationDelta += Pane_ManipulationDelta;
@@ -159,32 +156,32 @@ namespace BJUTDUHelper.View
         private void swipeBorder_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
         {
             e.Handled = true;
-            if(splitView.DisplayMode== SplitViewDisplayMode.Overlay)
+            if (splitView.DisplayMode == SplitViewDisplayMode.Overlay)
             {
-                if(e.Cumulative.Translation.X>0&& e.Cumulative.Translation.X <= splitView.OpenPaneLength)
+                if (e.Cumulative.Translation.X > 0 && e.Cumulative.Translation.X <= splitView.OpenPaneLength)
                 {
-                     
-                    paneGrid.Visibility = Visibility.Visible ;
+
+                    paneGrid.Visibility = Visibility.Visible;
 
                     trans = paneGrid.RenderTransform as CompositeTransform;
                     trans.TranslateX = (e.Cumulative.Translation.X - splitView.OpenPaneLength);
 
                     Debug.WriteLine("TranslateX:" + trans.TranslateX);
                 }
-               
+
             }
         }
 
         private void swipeBorder_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
         {
             e.Handled = true;
-            if ( splitView.DisplayMode== SplitViewDisplayMode.Overlay&&paneGrid != null)
+            if (splitView.DisplayMode == SplitViewDisplayMode.Overlay && paneGrid != null)
             {
                 paneGrid.Visibility = Visibility.Collapsed;
                 //paneGrid.Visibility = Visibility.Collapsed;
                 if (e.Cumulative.Translation.X > splitView.OpenPaneLength / 2.0)
                 {
-                    
+
                     splitView.IsPaneOpen = true;
                     //paneGrid.Visibility = Visibility.Visible ;
 
@@ -194,15 +191,19 @@ namespace BJUTDUHelper.View
                 }
                 else
                 {
-                    
+
                     trans = paneGrid.RenderTransform as CompositeTransform;
                     trans.TranslateX = 0;
                 }
                 //trans = paneGrid.RenderTransform as CompositeTransform;
                 //trans.TranslateX = 0;
             }
-            
-            
+        }
+
+        private void btnAbout_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationVM.MainTitle = "关于";
+            FuncFrame.Navigate(typeof(AboutView));
         }
     }
 }

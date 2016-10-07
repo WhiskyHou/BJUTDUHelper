@@ -27,6 +27,15 @@ namespace BJUTDUHelper.Service
             }
             BJUEDUHelperDbContext.SaveChanges();
         }
+        public static void RemoveInfoCenterUserinfo<T>(string username) where T : Model.UserBase, new()
+        {
+            var user = BJUEDUHelperDbContext.Set<T>().Where(m => m.Username == username).FirstOrDefault();
+            if (user != null)
+            {
+                BJUEDUHelperDbContext.Set<T>().Remove(user);
+            }
+            BJUEDUHelperDbContext.SaveChanges();
+        }
         public static List<T> GetInfoCenterUserinfo<T>() where T : Model.UserBase
         {
             List<T> list = new List<T>(0);

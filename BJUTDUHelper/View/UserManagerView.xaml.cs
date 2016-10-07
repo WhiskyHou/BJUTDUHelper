@@ -35,11 +35,60 @@ namespace BJUTDUHelper.View
             this.Loaded += UserManagerView_Loaded;
 
         }
+        
 
         private void UserManagerView_Loaded(object sender, RoutedEventArgs e)
         {
             UserManagerVM.Loaded();
         }
+
+        private void EditInfoClick(object sender, RoutedEventArgs e)
+        {
+            FrameworkElement grid= (FrameworkElement)VisualTreeHelper.GetParent((DependencyObject)sender);
+            var user = grid.DataContext as Model.UserBase;
+            if(user!=null)
+                UserManagerVM.EditInfoClick(user.Username);
+        }
+
+        private void EditEduClick(object sender, RoutedEventArgs e)
+        {
+            FrameworkElement grid = (FrameworkElement)VisualTreeHelper.GetParent((DependencyObject)sender);
+            var user = grid.DataContext as Model.UserBase;
+            if (user != null)
+                UserManagerVM.EditEduClick(user.Username);
+        }
+
+        private void EditLibClick(object sender, RoutedEventArgs e)
+        {
+            FrameworkElement grid = (FrameworkElement)VisualTreeHelper.GetParent((DependencyObject)sender);
+            var user = grid.DataContext as Model.UserBase;
+            if (user != null)
+                UserManagerVM.EditLibClick(user.Username);
+        }
+
+        private void DeleteLibClick(object sender, RoutedEventArgs e)
+        {
+            FrameworkElement grid = (FrameworkElement)VisualTreeHelper.GetParent((DependencyObject)sender);
+            var user = grid.DataContext as Model.UserBase;
+            if (user != null)
+                UserManagerVM.DeleteLibClick(user.Username);
+        }
+        private void DeleteEduClick(object sender, RoutedEventArgs e)
+        {
+            FrameworkElement grid = (FrameworkElement)VisualTreeHelper.GetParent((DependencyObject)sender);
+            var user = grid.DataContext as Model.UserBase;
+            if (user != null)
+                UserManagerVM.DeleteEduClick(user.Username);
+        }
+        private void DeleteInfoClick(object sender, RoutedEventArgs e)
+        {
+            FrameworkElement grid = (FrameworkElement)VisualTreeHelper.GetParent((DependencyObject)sender);
+            var user = grid.DataContext as Model.UserBase;
+            if (user != null)
+                UserManagerVM.DeleteInfoClick(user.Username);
+        }
+
+
     }
     public class PlaceHolderTextConvereter : IValueConverter
     {

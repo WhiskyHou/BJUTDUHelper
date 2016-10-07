@@ -23,33 +23,18 @@ namespace BJUTDUHelper.Control
     {
         public AccountModifyDlg()
         {
-           //this.NavigationCacheMode = NavigationCacheMode.Enabled;
             this.InitializeComponent();
-            //this.Visibility = Visibility.Collapsed;
             this.btnClose.Click += BtnClose_Click;
             this.btnSave.Click += BtnSave_Click;
             this.DataContext = this;
         }
 
-        private AppViewBackButtonVisibility orignalStatus;
         private void GetNavigationHandler()
         {
-            //var view = SystemNavigationManager.GetForCurrentView();
-            //view.BackRequested -= View.NavigationView.NavigationHnadler;
-            //view.BackRequested += View_BackRequested;
-
-            //orignalStatus = SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility;
-            //SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
-
             Service.NavigationService.RegSingleHandler(View_BackRequested);
         }
         private void DisposeNavigationHandler()
         {
-            //SystemNavigationManager.GetForCurrentView().BackRequested -= View_BackRequested;
-            //SystemNavigationManager.GetForCurrentView().BackRequested += View.NavigationView.NavigationHnadler;
-
-            //SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = orignalStatus;
-
             Service.NavigationService.UnRegSingleHandler(View_BackRequested);
         }
 

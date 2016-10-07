@@ -12,8 +12,8 @@ namespace BJUTDUHelper.ViewModel
     public  class WIFIHelperVM:ViewModelBase
     {
         public  ObservableCollection<BJUTInfoCenterUserinfo> BJUTInfoCenterUserinfos { get; set; }
-        private  BJUTInfoCenterUserinfo _infoUser;
-        public  BJUTInfoCenterUserinfo InfoUser
+        private BJUTInfoCenterUserinfo _infoUser;
+        public BJUTInfoCenterUserinfo InfoUser
         {
             get { return _infoUser; }
             set { Set(ref _infoUser, value); }

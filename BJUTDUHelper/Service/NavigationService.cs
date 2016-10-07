@@ -27,6 +27,7 @@ namespace BJUTDUHelper.Service
             {
                 lastSingleHandler = singleHandlers.Last().Key;
             }
+
             if (lastSingleHandler == null)
             {
                 var list = new List<EventHandler<BackRequestedEventArgs>>();
@@ -38,6 +39,7 @@ namespace BJUTDUHelper.Service
                     view.BackRequested -= item;
                 }
                 view.BackRequested += singleHandler;
+
                 HandlerIndexs.Add(singleHandler);
 
                 orinalVisibility = SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility;
@@ -61,13 +63,13 @@ namespace BJUTDUHelper.Service
         {
             var view = SystemNavigationManager.GetForCurrentView();
 
-            if (singleHandlers.Count <= 0)
+            if (HandlerIndexs.Count <= 0)
             {
                 lastSingleHandler = null;
             }
             else
             {
-                lastSingleHandler = singleHandlers.Last().Key;
+                lastSingleHandler = HandlerIndexs.Last();
             }
 
             if (lastSingleHandler == singleHandler)
@@ -87,16 +89,16 @@ namespace BJUTDUHelper.Service
                 {
                     var last = HandlerIndexs[1];
                     singleHandlers[last] = singleHandlers[singleHandler];
-                    view.BackRequested -= singleHandler;
-                    view.BackRequested += last;
+                    //view.BackRequested -= singleHandler;
+                    //view.BackRequested += last;
                 }
                 else
                 {
                     var front= HandlerIndexs[index -1];
                     var last = HandlerIndexs[index+1];
                     singleHandlers[last] = singleHandlers[front];
-                    view.BackRequested -= singleHandler;
-                    view.BackRequested += last;
+                    //view.BackRequested -= singleHandler;
+                    //view.BackRequested += last;
                 }
             }
             HandlerIndexs.Remove(singleHandler);
@@ -118,5 +120,7 @@ namespace BJUTDUHelper.Service
 
             view.BackRequested -= handler;
         }
+
+        
     }
 }

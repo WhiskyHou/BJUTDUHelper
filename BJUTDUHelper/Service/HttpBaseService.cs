@@ -47,9 +47,9 @@ namespace BJUTDUHelper.Service
                    
                     response = await _client.PostAsync(uri, content, cancellation);
                 }
-                var contentType = response.Content.Headers.GetValues("Content-Type").FirstOrDefault();
-                MediaTypeHeaderValue mediaTypeHeaderValue;
-                MediaTypeHeaderValue.TryParse(contentType, out mediaTypeHeaderValue);
+                var mediaTypeHeaderValue = response.Content.Headers.ContentType;
+                //MediaTypeHeaderValue mediaTypeHeaderValue;
+                //MediaTypeHeaderValue.TryParse(contentType, out mediaTypeHeaderValue);
                 if (mediaTypeHeaderValue != null&& mediaTypeHeaderValue.CharSet!=null)
                 {
                     if (mediaTypeHeaderValue.CharSet.Contains("gb2312"))

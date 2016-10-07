@@ -63,7 +63,7 @@
 
                         <TextBlock  VerticalAlignment="Center">
                             <Run Text="套餐类型:"/>
-                            <Run Text="{x:Bind WIFIHelperRegVM.WIFIHelperVM.InfoUser.InfoCenterAccountInfo.FluPackageType,Mode=OneWay}"></Run>
+                            <Run Text="{x:Bind WIFIHelperRegVM.AccountInfo.FluPackageType,Mode=OneWay}"></Run>
                         </TextBlock>
                         <Image  Source="/images/spin_28.png" Visibility="{x:Bind WIFIHelperRegVM.IsGetAccountInfo,Mode=OneWay,Converter={StaticResource BoolVisibiltyConverter}}">
                             <Image.Projection>
@@ -74,7 +74,7 @@
                     <Grid  >
                         <TextBlock>
                             <Run Text="套餐总量:"></Run>
-                            <Run Text="{x:Bind WIFIHelperRegVM.WIFIHelperVM.InfoUser.InfoCenterAccountInfo.TotalFlu,Mode=OneWay}"></Run>
+                            <Run Text="{x:Bind WIFIHelperRegVM.AccountInfo.TotalFlu,Mode=OneWay}"></Run>
                         </TextBlock>
                         <Image   Source="/images/spin_28.png" Visibility="{x:Bind WIFIHelperRegVM.IsGetAccountInfo,Mode=OneWay,Converter={StaticResource BoolVisibiltyConverter}}" >
                             <Image.Projection>
@@ -85,7 +85,7 @@
                     <Grid>
                         <TextBlock>
                             <Run Text="已使用量:"></Run>
-                            <Run Text="{x:Bind WIFIHelperRegVM.WIFIHelperVM.InfoUser.InfoCenterAccountInfo.UsedFlu,Mode=OneWay}"></Run>
+                            <Run Text="{x:Bind WIFIHelperRegVM.AccountInfo.UsedFlu,Mode=OneWay}"></Run>
 
                         </TextBlock>
                         <Image   Source="/images/spin_28.png" Visibility="{x:Bind WIFIHelperRegVM.IsGetAccountInfo,Mode=OneWay,Converter={StaticResource BoolVisibiltyConverter}}">
@@ -97,7 +97,7 @@
                     <Grid>
                         <TextBlock>
                             <Run Text="账户余额:"></Run>
-                            <Run Text="{x:Bind WIFIHelperRegVM.WIFIHelperVM.InfoUser.InfoCenterAccountInfo.Balance,Mode=OneWay}"></Run>
+                            <Run Text="{x:Bind WIFIHelperRegVM.AccountInfo.Balance,Mode=OneWay}"></Run>
                         </TextBlock>
                         <Image  Source="/images/spin_28.png" Visibility="{x:Bind WIFIHelperRegVM.IsGetAccountInfo,Mode=OneWay,Converter={StaticResource BoolVisibiltyConverter}}">
                             <Image.Projection>

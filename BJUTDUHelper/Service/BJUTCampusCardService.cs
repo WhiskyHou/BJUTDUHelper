@@ -14,12 +14,12 @@ namespace BJUTDUHelper.Service
     public class BJUTCampusCardService
     {
         private readonly string loginUri = "https://my.bjut.edu.cn/userPasswordValidate.portal";
-        private readonly string campusCardLoginUri = "http://172.21.99.11:9090/smart_web/";
-        private readonly string campusCardAjaxLoginUri= "http://172.21.99.11:9090/smart_web/ajax/login/sso";
-        private readonly string cardSalaryInfoUri = "http://172.21.99.11:9090/smart_web/ajax/card/list.json";
-        private readonly string cardBasicInfoUri = "http://172.21.99.11:9090/smart_web/ajax/person/getById.json";
-        private readonly string personImageUri = "http://172.21.99.11:9090/smart_web/ajax/person/getImage";
-        private readonly string campusCardTransactionUri = "http://172.21.99.11:9090/smart_web/ajax/tran/list.json";
+        private readonly string campusCardLoginUri = "https://cwss.bjut.edu.cn:9090/smart_web/";
+        private readonly string campusCardAjaxLoginUri= "https://cwss.bjut.edu.cn:9090/smart_web/ajax/login/sso";
+        private readonly string cardSalaryInfoUri = "https://cwss.bjut.edu.cn:9090/smart_web/ajax/card/list.json";
+        private readonly string cardBasicInfoUri = "https://cwss.bjut.edu.cn:9090/smart_web/ajax/person/getById.json";
+        private readonly string personImageUri = "https://cwss.bjut.edu.cn:9090/smart_web/ajax/person/getImage";
+        private readonly string campusCardTransactionUri = "https://cwss.bjut.edu.cn:9090/smart_web/ajax/tran/list.json";
         //登录信息门户
        
         public  async Task LoginInfoCenter( Service.HttpBaseService _httpService,string username, string password)

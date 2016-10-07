@@ -63,8 +63,8 @@
         </Grid.RowDefinitions>
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="44"/>
-                <RowDefinition Height="auto"/>
+                <RowDefinition Height="44"/> 
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Grid Background="{ThemeResource BJUTDUHelperBaseBackgroundThemeColor}">
                 <Grid.RowDefinitions>
@@ -78,7 +78,7 @@
 
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Foreground="{ThemeResource BJUTDUHelperBaseForegroundThemeColor}" VerticalAlignment="Bottom" FontSize="20" Padding="8,0,0,0"  Grid.Column="0" Text="交易时间"/>
+                <TextBlock Foreground="{ThemeResource BJUTDUHelperBaseForegroundThemeColor}" VerticalAlignment="Bottom" FontSize="20" Padding="8,0,0,0"  Grid.Column="0" Text="时间"/>
                 <TextBlock Foreground="{ThemeResource BJUTDUHelperBaseForegroundThemeColor}" VerticalAlignment="Bottom" FontSize="20" Grid.Column="1" Text="金额" />
                 <TextBlock Foreground="{ThemeResource BJUTDUHelperBaseForegroundThemeColor}" VerticalAlignment="Bottom" FontSize="20" Grid.Column="2" Text="余额" />
 
@@ -86,7 +86,7 @@
             <ListView x:Name="listView" Grid.Row="1"
                   ItemsSource="{x:Bind BJUTCampusCardTransactionVM.TransactionList,Mode=OneWay}" 
                   ItemTemplate="{StaticResource DataTemplateNoSelected}" 
-                  SelectionMode="Single" AllowDrop="True" CanDragItems="True" IsSwipeEnabled="True">
+                  SelectionMode="Single" ScrollViewer.HorizontalScrollMode="Disabled">
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
                         <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>

@@ -38,6 +38,13 @@ namespace BJUTDUHelper.ViewModel
             set { Set(ref _WIFIHelperVM, value); }
         }
 
+        private InfoCenterAccountInfo _accountInfo;
+        public InfoCenterAccountInfo AccountInfo
+        {
+            get { return _accountInfo; }
+            set { Set(ref _accountInfo, value); }
+        }
+
         private bool _isRegisted = false;
         public bool IsRegisted
         {
@@ -75,7 +82,7 @@ namespace BJUTDUHelper.ViewModel
         {
             AccountModifyVM = new ViewModel.AccountModifyVM();
             AccountModifyVM.Saved+= SaveUserinfo;
-
+            AccountInfo = new InfoCenterAccountInfo();
             SetRegistStatus();
 
         }
@@ -134,7 +141,7 @@ namespace BJUTDUHelper.ViewModel
 
             //更新数据
             if(WIFIHelperVM.InfoUser!=null)
-                GetAccountBasicInfo(WIFIHelperVM.InfoUser.Username, WIFIHelperVM.InfoUser.Username);
+                GetAccountBasicInfo(WIFIHelperVM.InfoUser.Username, WIFIHelperVM.InfoUser.Password);
             Active = false;
 
         }
@@ -274,25 +281,32 @@ namespace BJUTDUHelper.ViewModel
                 var service = json["note"].GetObject()["service"].GetString();
                 var leftmoney = json["note"].GetObject()["leftmoeny"].GetString();
                 var flutype = json["note"].GetObject()["welcome"].GetString();
-                
-                
-                re = await _httpService.SendRequst(loginUri, HttpMethod.Get);
-                string usedflu = FindInHtml(re, "flow='", false);
 
-                if (WIFIHelperVM.InfoUser.InfoCenterAccountInfo == null)
-                {
-                    WIFIHelperVM.InfoUser.InfoCenterAccountInfo = new InfoCenterAccountInfo();
-                }
-                WIFIHelperVM.InfoUser.InfoCenterAccountInfo.TotalFlu = totalFlu+"MB";
-                WIFIHelperVM.InfoUser.InfoCenterAccountInfo.Balance = leftmoney;
-                WIFIHelperVM.InfoUser.InfoCenterAccountInfo.FluPackageType = flutype;
-                WIFIHelperVM.InfoUser.InfoCenterAccountInfo.UsedFlu = usedflu+"MB";
+                AccountInfo.TotalFlu = totalFlu + "MB";
+                AccountInfo.Balance = leftmoney;
+                AccountInfo.FluPackageType = flutype;
 
                 IsGetAccountInfo = false;
             }
             catch
             {
             }
+            try
+            {
+                var re = await _httpService.SendRequst(loginUri, HttpMethod.Get);
+                string usedflu = FindInHtml(re, "flow='", false);
+
+               
+
+                AccountInfo.UsedFlu = usedflu + "MB";
+
+                IsGetAccountInfo = false;
+            }
+            catch
+            {
+
+            }
+            
         }
         /// <summary>
         /// 计算流量余额
@@ -321,10 +335,11 @@ namespace BJUTDUHelper.ViewModel
         }
 
 
-        public async void Loaded(object o)
+        public  void Loaded(object o)
         {
             View.WIFIRegViewParam param = o as View.WIFIRegViewParam;
             WIFIHelperVM = param.WIFIHelperVM;
+            //WIFIHelperVM.BJUTInfoCenterUserinfos = param.WIFIHelperVM.BJUTInfoCenterUserinfos;
 
             if (param .IsInternet!= null&& param.IsInternet==true)
             {
@@ -333,6 +348,8 @@ namespace BJUTDUHelper.ViewModel
             }
             if (WIFIHelperVM.InfoUser != null)
                 GetAccountBasicInfo(WIFIHelperVM.InfoUser.Username, WIFIHelperVM.InfoUser.Password);
+            else
+                GetAccountBasicInfo(null,null);
         }
 
       
